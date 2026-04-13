@@ -1,6 +1,14 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["marimo", "polars", "requests"]
+# dependencies = [
+#     "broad-babel==0.1.31",
+#     "duckdb==1.5.2",
+#     "jump-portrait==0.1.0",
+#     "marimo",
+#     "polars",
+#     "requests",
+#     "seaborn==0.13.2",
+# ]
 # ///
 
 import marimo
