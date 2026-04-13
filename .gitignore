@@ -1,0 +1,14 @@
+# marimo
+__marimo__/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# uv / venv
+.venv/
+.direnv/
+
+# OS
+.DS_Store
