@@ -5,23 +5,79 @@
 
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.23.1"
 app = marimo.App(width="medium")
 
-
-@app.cell
-def _():
+with app.setup:
     import marimo as mo
     import polars as pl
     import requests
-    import matplotlib.pyplot as plt
     import seaborn as sns
-    from random import choices, seed
-    return choices, mo, pl, plt, requests, seed, sns
+    import matplotlib.pyplot as plt
+    from random import choices, seed as seed_rng
+
+    ZENODO_RECORD = "15029005"
+    DISTANCE_DATASETS = ("crispr", "orf")
+
+
+@app.function
+def latest_zenodo_id(record: str = ZENODO_RECORD) -> str:
+    """Resolve the latest versioned record ID for a Zenodo concept record."""
+    return requests.get(
+        f"https://zenodo.org/api/records/{record}/versions/latest"
+    ).json()["id"]
+
+
+@app.function
+def load_distance_matrix(dataset: str) -> pl.LazyFrame:
+    """Lazy-scan the all-vs-all cosine similarity matrix for a dataset."""
+    latest_id = latest_zenodo_id()
+    url = (
+        f"https://zenodo.org/api/records/{latest_id}/files/"
+        f"{dataset}_cosinesim_full.parquet/content"
+    )
+    return pl.scan_parquet(url)
+
+
+@app.function
+def sample_submatrix(
+    distances: pl.LazyFrame, n: int, rseed: int = 42
+) -> pl.DataFrame:
+    """Pick n random rows+cols and return the corresponding square submatrix."""
+    seed_rng(rseed)
+    cols = distances.collect_schema().names()
+    idx = sorted(choices(range(len(cols)), k=n))
+    sampled_cols = [cols[i] for i in idx]
+    return (
+        distances.with_row_index()
+        .filter(pl.col("index").is_in(idx))
+        .select(pl.col(sampled_cols))
+        .collect()
+    )
+
+
+@app.function
+def plot_similarity_heatmap(submatrix: pl.DataFrame):
+    """Render a labeled square distance heatmap (0=identical, 2=anticorrelated)."""
+    pdf = submatrix.to_pandas()
+    pdf.index = pdf.columns
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(
+        pdf,
+        annot=True,
+        fmt=".3f",
+        vmin=0,
+        vmax=2,
+        cmap=sns.color_palette("vlag", as_cmap=True),
+        ax=ax,
+    )
+    plt.yticks(rotation=30)
+    plt.tight_layout()
+    return fig
 
 
 @app.cell
-def _(mo):
+def intro():
     mo.md(
         """
         # Explore perturbation similarity
@@ -38,9 +94,9 @@ def _(mo):
 
 
 @app.cell
-def _(mo):
+def controls():
     dataset_selector = mo.ui.dropdown(
-        options=["crispr", "orf"],
+        options=list(DISTANCE_DATASETS),
         value="crispr",
         label="Dataset",
     )
@@ -53,62 +109,33 @@ def _(mo):
 
 
 @app.cell
-def _(dataset_selector, pl, requests):
-    latest_id = requests.get(
-        "https://zenodo.org/api/records/15029005/versions/latest"
-    ).json()["id"]
-    distances = pl.scan_parquet(
-        f"https://zenodo.org/api/records/{latest_id}/files/{dataset_selector.value}_cosinesim_full.parquet/content"
-    )
+def loaded_distances(dataset_selector):
+    distances = load_distance_matrix(dataset_selector.value)
     return (distances,)
 
 
 @app.cell
-def _(mo):
+def submatrix_header():
     mo.md("## Sampled distance matrix")
     return
 
 
 @app.cell
-def _(choices, distances, n_perturbations, pl, random_seed, seed):
-    seed(random_seed.value)
-    cols = distances.collect_schema().names()
-    ncols = len(cols)
-    sampled_col_idx = sorted(choices(range(ncols), k=n_perturbations.value))
-    sampled_cols = [cols[ix] for ix in sampled_col_idx]
-    sampled_distances = (
-        distances.with_row_index()
-        .filter(pl.col("index").is_in(sampled_col_idx))
-        .select(pl.col(sampled_cols))
-        .collect()
-    )
-    sampled_distances
-    return (sampled_distances,)
+def sampled_distances(distances, n_perturbations, random_seed):
+    submatrix = sample_submatrix(distances, n_perturbations.value, random_seed.value)
+    submatrix
+    return (submatrix,)
 
 
 @app.cell
-def _(mo):
+def heatmap_header():
     mo.md("## Similarity heatmap")
     return
 
 
 @app.cell
-def _(plt, sampled_distances, sns):
-    _pdf = sampled_distances.to_pandas()
-    _pdf.index = _pdf.columns
-    _fig, _ax = plt.subplots(figsize=(8, 6))
-    sns.heatmap(
-        _pdf,
-        annot=True,
-        fmt=".3f",
-        vmin=0,
-        vmax=2,
-        cmap=sns.color_palette("vlag", as_cmap=True),
-        ax=_ax,
-    )
-    plt.yticks(rotation=30)
-    plt.tight_layout()
-    _fig
+def heatmap(submatrix):
+    plot_similarity_heatmap(submatrix)
     return
 
 

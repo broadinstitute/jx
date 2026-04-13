@@ -5,21 +5,66 @@
 
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.23.1"
 app = marimo.App(width="medium")
 
-
-@app.cell
-def _():
+with app.setup:
     import marimo as mo
     import polars as pl
     import requests
     from broad_babel.query import get_mapper
-    return get_mapper, mo, pl, requests
+
+    PROFILE_INDEX_URL = "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    SUBSETS = ("crispr", "orf", "compound")
+    NEGCON_JCP = "JCP2022_800002"
+
+
+@app.function
+def load_profiles(subset: str) -> pl.LazyFrame:
+    """Lazy-scan the parquet file for a named JUMP subset."""
+    index = requests.get(PROFILE_INDEX_URL).json()
+    url = pl.DataFrame(index).filter(pl.col("subset") == subset).item(0, "url")
+    return pl.scan_parquet(url)
+
+
+@app.function
+def sample_with_negcon(
+    profiles: pl.LazyFrame, n: int, seed: int = 42, negcon: str = NEGCON_JCP
+) -> tuple[str, ...]:
+    """Sample n perturbation IDs from a profile frame, appending a known negcon."""
+    jcp_ids = (
+        profiles.select(pl.col("Metadata_JCP2022")).unique().collect().to_series().sort()
+    )
+    sample = jcp_ids.sample(n, seed=seed)
+    return (*sample, negcon)
+
+
+@app.function
+def build_mapper(jcp_ids: tuple[str, ...], output_column: str) -> dict[str, str]:
+    """broad-babel mapper from JCP2022 IDs to any metadata column."""
+    return get_mapper(
+        jcp_ids,
+        input_column="JCP2022",
+        output_columns=f"JCP2022,{output_column}",
+    )
+
+
+@app.function
+def annotate_profiles(
+    profiles: pl.LazyFrame, jcp_ids: tuple[str, ...]
+) -> pl.DataFrame:
+    """Filter to a JCP subsample and attach pert_type + standard name columns."""
+    subset = profiles.filter(pl.col("Metadata_JCP2022").is_in(jcp_ids)).collect()
+    pert_mapper = build_mapper(jcp_ids, "pert_type")
+    name_mapper = build_mapper(jcp_ids, "standard_key")
+    return subset.with_columns(
+        pl.col("Metadata_JCP2022").replace(pert_mapper).alias("pert_type"),
+        pl.col("Metadata_JCP2022").replace(name_mapper).alias("name"),
+    )
 
 
 @app.cell
-def _(mo):
+def intro():
     mo.md(
         """
         # Add metadata to profiles
@@ -33,9 +78,9 @@ def _(mo):
 
 
 @app.cell
-def _(mo):
+def controls():
     subset_selector = mo.ui.dropdown(
-        options=["crispr", "orf", "compound"],
+        options=list(SUBSETS),
         value="crispr",
         label="Dataset",
     )
@@ -47,79 +92,56 @@ def _(mo):
 
 
 @app.cell
-def _(pl, requests, subset_selector):
-    INDEX_FILE = "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
-    response = requests.get(INDEX_FILE)
-    profile_index = response.json()
-    url = (
-        pl.DataFrame(profile_index)
-        .filter(pl.col("subset") == subset_selector.value)
-        .item(0, "url")
-    )
-    profiles = pl.scan_parquet(url)
+def loaded_profiles(subset_selector):
+    profiles = load_profiles(subset_selector.value)
     return (profiles,)
 
 
 @app.cell
-def _(n_samples, pl, profiles):
-    jcp_ids = (
-        profiles.select(pl.col("Metadata_JCP2022")).unique().collect().to_series().sort()
-    )
-    subsample = jcp_ids.sample(n_samples.value, seed=42)
-    # Add a well-known negative control
-    subsample = (*subsample, "JCP2022_800002")
-    return jcp_ids, subsample
+def sampled_ids(profiles, n_samples):
+    subsample = sample_with_negcon(profiles, n_samples.value)
+    return (subsample,)
 
 
 @app.cell
-def _(mo):
+def pert_header():
     mo.md("## Perturbation type mapper")
     return
 
 
 @app.cell
-def _(get_mapper, pl, subsample):
-    pert_mapper = get_mapper(
-        subsample, input_column="JCP2022", output_columns="JCP2022,pert_type"
-    )
+def pert_table(subsample):
+    pert_mapper = build_mapper(subsample, "pert_type")
     pl.DataFrame(
         {"JCP2022": list(pert_mapper.keys()), "pert_type": list(pert_mapper.values())}
     )
-    return (pert_mapper,)
+    return
 
 
 @app.cell
-def _(mo):
+def name_header():
     mo.md("## Standard name mapper")
     return
 
 
 @app.cell
-def _(get_mapper, pl, subsample):
-    name_mapper = get_mapper(
-        subsample, input_column="JCP2022", output_columns="JCP2022,standard_key"
-    )
+def name_table(subsample):
+    name_mapper = build_mapper(subsample, "standard_key")
     pl.DataFrame(
         {"JCP2022": list(name_mapper.keys()), "standard_key": list(name_mapper.values())}
     )
-    return (name_mapper,)
+    return
 
 
 @app.cell
-def _(mo):
+def annotated_header():
     mo.md("## Profiles with metadata")
     return
 
 
 @app.cell
-def _(name_mapper, pert_mapper, pl, profiles, subsample):
-    subsample_profiles = profiles.filter(
-        pl.col("Metadata_JCP2022").is_in(subsample)
-    ).collect()
-    profiles_with_meta = subsample_profiles.with_columns(
-        pl.col("Metadata_JCP2022").replace(pert_mapper).alias("pert_type"),
-        pl.col("Metadata_JCP2022").replace(name_mapper).alias("name"),
-    )
+def annotated_table(profiles, subsample):
+    profiles_with_meta = annotate_profiles(profiles, subsample)
     profiles_with_meta.select(
         pl.col(("name", "pert_type", "^Metadata.*$", "^X_[0-3]$"))
     ).sort(by="pert_type")

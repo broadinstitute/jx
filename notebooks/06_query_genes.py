@@ -5,21 +5,54 @@
 
 import marimo
 
-__generated_with = "0.13.0"
+__generated_with = "0.23.1"
 app = marimo.App(width="medium")
 
-
-@app.cell
-def _():
+with app.setup:
     import marimo as mo
     import polars as pl
     from Bio import Entrez
     from broad_babel.query import get_mapper
-    return Entrez, get_mapper, mo, pl
+
+    ENTREZ_FIELDS = ("Name", "Description", "Summary", "OtherDesignations")
+
+
+@app.function
+def gene_symbols_to_ncbi(symbols: tuple[str, ...]) -> dict[str, str]:
+    """Resolve a tuple of gene symbols to their NCBI Gene IDs via broad-babel."""
+    return get_mapper(
+        query=symbols,
+        input_column="standard_key",
+        output_columns="standard_key,NCBI_Gene_ID",
+    )
+
+
+@app.function
+def entrez_gene_info(
+    ncbi_ids: tuple[str, ...],
+    email: str,
+    fields: tuple[str, ...] = ENTREZ_FIELDS,
+) -> pl.DataFrame:
+    """Fetch Entrez gene summaries for a list of NCBI Gene IDs."""
+    Entrez.email = email
+    entries = []
+    for id_ in ncbi_ids:
+        stream = Entrez.esummary(db="gene", id=id_)
+        record = Entrez.read(stream)
+        entries.append(
+            {k: record["DocumentSummarySet"]["DocumentSummary"][0][k] for k in fields}
+        )
+    return pl.DataFrame(entries)
+
+
+@app.function
+def parse_gene_list(raw: str) -> tuple[str, ...]:
+    """Split a comma-separated gene symbol string into a cleaned tuple."""
+    return tuple(g.strip() for g in raw.split(",") if g.strip())
 
 
 @app.cell
-def _(mo):
+def intro():
     mo.md(
         """
         # Query genes externally
@@ -34,7 +67,7 @@ def _(mo):
 
 
 @app.cell
-def _(mo):
+def controls():
     gene_input = mo.ui.text(
         value="CHRM4, SCAPER, GPR176, LY6K",
         label="Gene symbols (comma-separated)",
@@ -48,27 +81,10 @@ def _(mo):
 
 
 @app.cell
-def _(Entrez, email_input, gene_input, get_mapper, pl):
-    genes = tuple(g.strip() for g in gene_input.value.split(",") if g.strip())
-    Entrez.email = email_input.value
-
-    fields = ("Name", "Description", "Summary", "OtherDesignations")
-
-    ids = get_mapper(
-        query=genes,
-        input_column="standard_key",
-        output_columns="standard_key,NCBI_Gene_ID",
-    )
-
-    entries = []
-    for id_ in ids.values():
-        stream = Entrez.esummary(db="gene", id=id_)
-        record = Entrez.read(stream)
-        entries.append(
-            {k: record["DocumentSummarySet"]["DocumentSummary"][0][k] for k in fields}
-        )
-
-    gene_info = pl.DataFrame(entries)
+def gene_table(gene_input, email_input):
+    genes = parse_gene_list(gene_input.value)
+    ids = gene_symbols_to_ncbi(genes)
+    gene_info = entrez_gene_info(tuple(ids.values()), email_input.value)
     gene_info
     return
 

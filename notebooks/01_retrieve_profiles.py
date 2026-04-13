@@ -8,18 +8,47 @@ import marimo
 __generated_with = "0.23.1"
 app = marimo.App(width="medium")
 
-
-@app.cell
-def _():
+with app.setup:
     import marimo as mo
     import polars as pl
     import requests
 
-    return mo, pl, requests
+    PROFILE_INDEX_URL = "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    SUBSETS = ("crispr", "orf", "compound")
+
+
+@app.function
+def load_profile_index() -> list[dict]:
+    """Fetch the JUMP profile manifest as a list of subset entries."""
+    return requests.get(PROFILE_INDEX_URL).json()
+
+
+@app.function
+def load_profiles(subset: str) -> pl.LazyFrame:
+    """Lazy-scan the parquet file for a named JUMP subset (e.g. 'crispr')."""
+    index = load_profile_index()
+    url = pl.DataFrame(index).filter(pl.col("subset") == subset).item(0, "url")
+    return pl.scan_parquet(url)
+
+
+@app.function
+def profile_stats(subsets: tuple[str, ...] = SUBSETS) -> pl.DataFrame:
+    """Row/column/size stats for each named subset."""
+    info = {k: [] for k in ("dataset", "#rows", "#cols", "#Metadata cols", "Size (MB)")}
+    for name in subsets:
+        data = load_profiles(name)
+        n_rows = data.select(pl.len()).collect().item()
+        schema = data.collect_schema()
+        n_cols = schema.len()
+        n_meta = sum(1 for c in schema if c.startswith("Metadata"))
+        est_mb = int(round(4.03 * n_rows * n_cols / 1e6))
+        for k, v in zip(info, (name, n_rows, n_cols, n_meta, est_mb)):
+            info[k].append(v)
+    return pl.DataFrame(info)
 
 
 @app.cell
-def _(mo):
+def intro():
     mo.md("""
     # Retrieve JUMP profiles
 
@@ -42,17 +71,9 @@ def _(mo):
 
 
 @app.cell
-def _(requests):
-    INDEX_FILE = "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
-    response = requests.get(INDEX_FILE)
-    profile_index = response.json()
-    return (profile_index,)
-
-
-@app.cell
-def _(mo, pl, profile_index):
-    profile_df = pl.DataFrame(profile_index)
-    display_df = profile_df.select(
+def manifest_table():
+    profile_index = load_profile_index()
+    display_df = pl.DataFrame(profile_index).select(
         "subset",
         pl.col("url").str.extract(r"([^/]+)\.parquet$").alias("filename"),
         pl.col("recipe_permalink")
@@ -68,9 +89,9 @@ def _(mo, pl, profile_index):
 
 
 @app.cell
-def _(mo):
+def subset_picker():
     subset_selector = mo.ui.dropdown(
-        options=["crispr", "orf", "compound"],
+        options=list(SUBSETS),
         value="crispr",
         label="Dataset",
     )
@@ -79,69 +100,44 @@ def _(mo):
 
 
 @app.cell
-def _(pl, profile_index, subset_selector):
-    filepaths = {
-        d["subset"]: d["url"]
-        for d in profile_index
-        if d["subset"] in ("crispr", "orf", "compound")
-    }
-    selected_url = filepaths[subset_selector.value]
-    data = pl.scan_parquet(selected_url)
-    return data, filepaths
+def selected_profiles(subset_selector):
+    data = load_profiles(subset_selector.value)
+    return (data,)
 
 
 @app.cell
-def _(mo):
-    mo.md("""
-    ## Dataset statistics
-    """)
+def stats_header():
+    mo.md("## Dataset statistics")
     return
 
 
 @app.cell
-def _(filepaths, pl):
-    info = {k: [] for k in ("dataset", "#rows", "#cols", "#Metadata cols", "Size (MB)")}
-    for name, path in filepaths.items():
-        _data = pl.scan_parquet(path)
-        n_rows = _data.select(pl.len()).collect().item()
-        schema = _data.collect_schema()
-        metadata_cols = [col for col in schema.keys() if col.startswith("Metadata")]
-        n_cols = schema.len()
-        n_meta_cols = len(metadata_cols)
-        estimated_size = int(round(4.03 * n_rows * n_cols / 1e6, 0))
-        for k, v in zip(info.keys(), (name, n_rows, n_cols, n_meta_cols, estimated_size)):
-            info[k].append(v)
-    stats_df = pl.DataFrame(info)
-    stats_df
+def stats_table():
+    profile_stats()
     return
 
 
 @app.cell
-def _(mo):
-    mo.md("""
-    ## Metadata columns (sample)
-    """)
+def metadata_header():
+    mo.md("## Metadata columns (sample)")
     return
 
 
 @app.cell
-def _(data, pl):
+def metadata_sample(data):
     data.select(pl.col("^Metadata.*$")).head(5).collect()
     return
 
 
 @app.cell
-def _(mo):
-    mo.md("""
-    ## Feature columns (sample)
-    """)
+def features_header():
+    mo.md("## Feature columns (sample)")
     return
 
 
 @app.cell
-def _(data, pl):
-    features_sample = data.select(pl.all().exclude("^Metadata.*$")).head(5).collect()
-    features_sample
+def features_sample(data):
+    data.select(pl.all().exclude("^Metadata.*$")).head(5).collect()
     return
 
 
