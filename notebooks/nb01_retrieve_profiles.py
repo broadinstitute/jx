@@ -32,11 +32,6 @@ def load_profile_index() -> list[dict]:
 
 
 @app.function
-def hello_world():
-    return "hello!" + SUBSETS[0]
-
-
-@app.function
 def load_profiles(subset: str) -> pl.LazyFrame:
     """Lazy-scan the parquet file for a named JUMP subset (e.g. 'crispr')."""
     index = load_profile_index()
