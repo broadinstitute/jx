@@ -4,7 +4,7 @@ An experiment in agent-driven scientific data exploration, built around [JUMP Ce
 
 ## The hypothesis
 
-A catalog of real analyses — working [marimo](https://marimo.io) notebooks, each embodying an actual use case — is a more useful artifact than a library. Each notebook is both a runnable demonstration of a use case and a source of pure functions that other notebooks can import and reuse directly. This means the catalog is simultaneously documentation, working code, and a compositional building block — without the maintenance overhead of a separate library.
+A catalog of real analyses — working [marimo](https://marimo.io) notebooks, each embodying an actual use case — is a better artifact than a Python library, or even an extensive skills library. Each notebook is both a runnable demonstration of a use case and a source of pure functions that other notebooks can import and reuse directly. This means the catalog is simultaneously documentation, working code, and a compositional building block — without the maintenance overhead of a separate library.
 
 A thin skill file tells an AI agent (Claude Code + [marimo-pair](https://github.com/marimo-team/marimo-pair)) what's in the catalog and how to compose from it. Given a new biological question, the agent picks relevant notebooks, composes their reusable functions into a new notebook, executes it in a live kernel, and hands back a self-contained, re-runnable result. The catalog grows as new analyses are added. The skill stays thin on purpose.
 
