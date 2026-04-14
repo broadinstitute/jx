@@ -4,9 +4,13 @@ An experiment in agent-driven scientific data exploration, built around [JUMP Ce
 
 ## The hypothesis
 
-A catalog of real analyses — working [marimo](https://marimo.io) notebooks, each embodying an actual use case — is a more useful artifact than a library. Marimo notebooks are plain Python files. Their functions, when written without notebook-local state, are directly importable by other notebooks. A thin skill file tells an AI agent (Claude Code + [marimo-pair](https://github.com/marimo-team/marimo-pair)) what's in the catalog and how to compose from it. Given a new biological question, the agent picks relevant notebooks, composes their reusable functions into a new notebook, executes it in a live kernel, and hands back a self-contained, re-runnable result. The catalog grows as new analyses are added. The skill stays thin on purpose.
+A catalog of real analyses — working [marimo](https://marimo.io) notebooks, each embodying an actual use case — is a more useful artifact than a library. Each notebook is both a runnable demonstration of a use case and a source of pure functions that other notebooks can import and reuse directly. This means the catalog is simultaneously documentation, working code, and a compositional building block — without the maintenance overhead of a separate library.
+
+A thin skill file tells an AI agent (Claude Code + [marimo-pair](https://github.com/marimo-team/marimo-pair)) what's in the catalog and how to compose from it. Given a new biological question, the agent picks relevant notebooks, composes their reusable functions into a new notebook, executes it in a live kernel, and hands back a self-contained, re-runnable result. The catalog grows as new analyses are added. The skill stays thin on purpose.
 
 If this works for JUMP, the pattern transfers: new dataset = new catalog + new skill, same machinery.
+
+The idea that notebooks can serve as both documentation and library isn't new — [fast.ai](https://www.fast.ai/) developed its deep learning library this way at scale using [nbdev](https://nbdev.fast.ai/). What's different here is the agent composition angle: rather than publishing a package, the catalog is the substrate an agent reasons over and builds from.
 
 ## The catalog
 
