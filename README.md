@@ -23,10 +23,14 @@ Requires Python ≥ 3.11 and [uv](https://docs.astral.sh/uv/).
 Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) script — dependencies are declared inline. Open any notebook interactively with marimo:
 
 ```bash
-# uv installs dependencies automatically on first run
 uvx marimo edit notebooks/nb01_retrieve_profiles.py
+```
 
-# Nix users: unset PYTHONPATH first to avoid a websockets conflict
+On first open, marimo will show a **"Missing packages"** prompt listing `polars`, `requests`, and others — click **Install** and it will set up a venv automatically. This is expected; subsequent opens skip it.
+
+If you're on a **Nix-managed machine** (the shell exports `PYTHONPATH` pointing into the Nix store), marimo will fail with a `websockets` import error before the notebook opens. Unset it first:
+
+```bash
 env -u PYTHONPATH uvx marimo edit notebooks/nb01_retrieve_profiles.py
 ```
 
