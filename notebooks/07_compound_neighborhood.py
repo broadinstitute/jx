@@ -3,7 +3,6 @@
 # dependencies = [
 #     "marimo",
 #     "polars",
-#     "pandas",
 #     "requests",
 #     "matplotlib",
 #     "seaborn",
@@ -17,67 +16,33 @@
 import marimo
 
 __generated_with = "0.23.1"
-app = marimo.App(width="medium")
+app = marimo.App(
+    width="medium",
+    layout_file="layouts/07_compound_neighborhood.grid.json",
+)
 
 with app.setup:
-    import importlib.util
     import os
+    import sys
     from pathlib import Path
 
-    import duckdb
     import marimo as mo
-    import pandas as pd
     import polars as pl
-    from broad_babel import query as bq
-    from jump_portrait.fetch import get_index_file, get_table
 
     NOTEBOOK_DIR = Path(__file__).parent
     CACHE_DIR = Path(os.environ.get("JX_CACHE", Path.home() / ".cache" / "jx"))
 
-    def _load_catalog(stem: str):
-        path = NOTEBOOK_DIR / f"{stem}.py"
-        spec = importlib.util.spec_from_file_location(stem, path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        return module
+    if str(NOTEBOOK_DIR) not in sys.path:
+        sys.path.insert(0, str(NOTEBOOK_DIR))
 
-    nb01 = _load_catalog("01_retrieve_profiles")
-    nb02 = _load_catalog("02_add_metadata")
-    nb04 = _load_catalog("04_display_images")
-    nb05 = _load_catalog("05_explore_similarity")
-
-    load_profiles = nb01.load_profiles
-    annotate_profiles = nb02.annotate_profiles
-    build_mapper = nb02.build_mapper
-    pick_first_site = nb04.pick_first_site
-    display_site = nb04.display_site
-
-
-@app.function
-def lookup_site_metadata(jcp: str):
-    """Resolve a JCP2022 ID to its imaging-site rows.
-
-    Replaces ``nb04.lookup_site_metadata`` because the upstream
-    ``jump_portrait.fetch.get_item_location_metadata`` uses a duckdb
-    replacement scan against ``meta_wells``, which ``get_table('well')``
-    returns as a path string instead of a DataFrame. We materialise it
-    here and run the same join.
-    """
-    meta_wells = pd.read_csv(get_table("well"))  # noqa: F841 — used by duckdb scan
-    index_file = get_index_file()
-    jcp_pairs = bq.run_query(
-        query=jcp, input_column="JCP2022", output_columns="JCP2022,standard_key"
+    from nb01_retrieve_profiles import load_profiles
+    from nb02_add_metadata import annotate_profiles, build_mapper
+    from nb04_display_images import (
+        display_site,
+        lookup_site_metadata,
+        pick_first_site,
     )
-    jcp_keys = tuple(dict(jcp_pairs).keys())
-    with duckdb.connect() as con:
-        found_rows = con.sql(
-            f"SELECT *, '{jcp}' AS standard_key FROM meta_wells "
-            f"WHERE Metadata_JCP2022 IN {list(jcp_keys)}"
-        )
-        return con.sql(
-            f"FROM found_rows JOIN (FROM read_parquet('{index_file}')) "
-            "USING(Metadata_Source,Metadata_Plate,Metadata_Well)"
-        ).to_arrow_table()
+    from nb05_explore_similarity import load_distance_matrix
 
 
 @app.function
@@ -86,7 +51,7 @@ def load_similarity_matrix(dataset: str) -> pl.LazyFrame:
     cached = CACHE_DIR / f"{dataset}_cosinesim_full.parquet"
     if cached.exists():
         return pl.scan_parquet(cached)
-    return nb05.load_distance_matrix(dataset)
+    return load_distance_matrix(dataset)
 
 
 @app.function
@@ -109,30 +74,20 @@ def nearest_neighbors(
 
 @app.cell
 def intro():
-    mo.md(
-        """
-        # Compound neighborhood vignette
+    mo.md("""
+    # Compound neighborhood vignette
 
-        *"I've seen an interesting phenotype from compound X. What else in JUMP
-        looks like it? What do those neighbors target? Show me the images."*
+    *"I've seen an interesting phenotype from compound X. What else in JUMP
+    looks like it? What do those neighbors target? Show me the images."*
 
-        This notebook composes four catalog notebooks:
+    This notebook composes four catalog notebooks via plain Python imports
+    (`from nb01_retrieve_profiles import load_profiles`, etc.), available
+    because each catalog file is a marimo notebook with hoisted
+    `@app.function`s.
 
-        - **01_retrieve_profiles** — `load_profiles`
-        - **02_add_metadata** — `annotate_profiles`, `build_mapper`
-        - **04_display_images** — `lookup_site_metadata`, `pick_first_site`, `display_site`
-        - **05_explore_similarity** — `load_distance_matrix`
-
-        Functions are imported from sibling notebooks via `importlib`; the only
-        new logic is the `load_similarity_matrix` cache wrapper and the
-        `nearest_neighbors` helper.
-
-        The full ~250 MB cosine matrix is large enough that it's worth caching
-        once to `~/.cache/jx/` (override with `JX_CACHE`) — set the cache up
-        with `curl -o ~/.cache/jx/crispr_cosinesim_full.parquet
-        https://zenodo.org/api/records/<id>/files/crispr_cosinesim_full.parquet/content`.
-        """
-    )
+    The full ~250 MB cosine matrix is large enough that it's worth caching
+    once to `~/.cache/jx/` (override with `JX_CACHE`).
+    """)
     return
 
 
@@ -155,27 +110,24 @@ def controls():
 
 
 @app.cell
-def neighbors_header():
-    mo.md("## Nearest neighbors by cosine distance")
-    return
-
-
-@app.cell
-def neighbors_table(dataset_selector, query_input, k_neighbors):
+def neighbors_table(dataset_selector, k_neighbors, query_input):
     similarities = load_similarity_matrix(dataset_selector.value)
-    neighbors = nearest_neighbors(similarities, query_input.value, k_neighbors.value)
-    neighbors
+    neighbors = nearest_neighbors(
+        similarities, query_input.value, k_neighbors.value
+    )
     return (neighbors,)
 
 
 @app.cell
 def annotation_header():
-    mo.md("## Annotate neighbors with names and targets")
+    mo.md("""
+    ## Top neighbors with annotations (interactive)
+    """)
     return
 
 
 @app.cell
-def annotated_neighbors(dataset_selector, query_input, neighbors):
+def annotated_neighbors(dataset_selector, neighbors, query_input):
     jcp_ids = (query_input.value, *neighbors.get_column("JCP2022").to_list())
     profiles = load_profiles(dataset_selector.value)
     gene_id_mapper = build_mapper(jcp_ids, "NCBI_Gene_ID")
@@ -184,28 +136,44 @@ def annotated_neighbors(dataset_selector, query_input, neighbors):
         .select("Metadata_JCP2022", "name", "pert_type")
         .unique(subset=["Metadata_JCP2022"])
         .with_columns(
-            pl.col("Metadata_JCP2022").replace(gene_id_mapper).alias("ncbi_gene_id")
+            pl.col("Metadata_JCP2022")
+            .replace(gene_id_mapper)
+            .alias("ncbi_gene_id")
         )
     )
     merged = neighbors.join(
         annotated, left_on="JCP2022", right_on="Metadata_JCP2022", how="left"
     )
-    merged
-    return (merged,)
+
+    merged_table = mo.ui.table(
+        merged,
+        selection="single",
+        page_size=10,
+        label="Click a row to display its 5-channel images alongside the query.",
+    )
+    merged_table
+    return merged, merged_table
 
 
 @app.cell
 def images_header():
-    mo.md("## Side-by-side images (query + top hit)")
+    mo.md("""
+    ## Side-by-side images — query vs selected neighbor
+    """)
     return
 
 
 @app.cell
-def image_grid(query_input, merged):
-    top_hit = merged.row(0, named=True)["JCP2022"]
+def image_grid(merged, merged_table, query_input):
+    selected = merged_table.value
+    if selected is not None and not selected.is_empty():
+        top_hit = selected.row(0, named=True)["JCP2022"]
+    else:
+        top_hit = merged.row(0, named=True)["JCP2022"]
+
     figures = []
     for jcp in (query_input.value, top_hit):
-        sites = lookup_site_metadata(jcp)
+        sites = lookup_site_metadata(jcp, input_column="JCP2022")
         site = pick_first_site(sites)
         figures.append(
             display_site(
@@ -217,7 +185,7 @@ def image_grid(query_input, merged):
                 jcp,
             )
         )
-    mo.vstack([mo.as_html(f) for f in figures])
+    mo.hstack([mo.as_html(f) for f in figures], justify="start", gap=2)
     return
 
 

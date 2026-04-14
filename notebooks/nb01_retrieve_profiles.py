@@ -3,7 +3,7 @@
 # dependencies = [
 #     "broad-babel==0.1.31",
 #     "duckdb==1.5.2",
-#     "jump-portrait==0.1.0",
+#     "jump-portrait==0.1.1",
 #     "marimo",
 #     "polars",
 #     "requests",
@@ -29,6 +29,11 @@ with app.setup:
 def load_profile_index() -> list[dict]:
     """Fetch the JUMP profile manifest as a list of subset entries."""
     return requests.get(PROFILE_INDEX_URL).json()
+
+
+@app.function
+def hello_world():
+    return "hello!" + SUBSETS[0]
 
 
 @app.function
@@ -88,9 +93,7 @@ def manifest_table():
         .str.extract(r"tree/([^/]+)$")
         .str.slice(0, 7)
         .alias("recipe_version"),
-        pl.col("config_permalink")
-        .str.extract(r"([^/]+)\.json$")
-        .alias("config"),
+        pl.col("config_permalink").str.extract(r"([^/]+)\.json$").alias("config"),
     )
     mo.ui.table(display_df)
     return
@@ -115,7 +118,9 @@ def selected_profiles(subset_selector):
 
 @app.cell
 def stats_header():
-    mo.md("## Dataset statistics")
+    mo.md("""
+    ## Dataset statistics
+    """)
     return
 
 
@@ -127,7 +132,9 @@ def stats_table():
 
 @app.cell
 def metadata_header():
-    mo.md("## Metadata columns (sample)")
+    mo.md("""
+    ## Metadata columns (sample)
+    """)
     return
 
 
@@ -139,7 +146,9 @@ def metadata_sample(data):
 
 @app.cell
 def features_header():
-    mo.md("## Feature columns (sample)")
+    mo.md("""
+    ## Feature columns (sample)
+    """)
     return
 
 
