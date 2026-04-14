@@ -34,11 +34,14 @@ The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine 
 
 ```bash
 mkdir -p ~/.cache/jx
-# Find the file URL at https://zenodo.org/records/13259495, then:
-curl -L -o ~/.cache/jx/crispr_cosinesim_full.parquet <url>
+ZENODO_ID=$(curl -s "https://zenodo.org/api/records/15029005/versions/latest" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+curl -L -o ~/.cache/jx/crispr_cosinesim_full.parquet \
+  "https://zenodo.org/api/records/${ZENODO_ID}/files/crispr_cosinesim_full.parquet/content"
 ```
 
 Set `JX_CACHE` to point elsewhere if you prefer a different cache location.
+
+There is no `pyproject.toml` — this repo contains notebooks, not an installable package. `uv sync` will find nothing to do; use `uvx marimo edit` as above.
 
 ## License
 
