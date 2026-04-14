@@ -20,18 +20,30 @@ A starter pack of six notebooks adapted from [JUMP-Hub](https://github.com/jump-
 
 Requires Python ≥ 3.11 and [uv](https://docs.astral.sh/uv/).
 
-Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) script — dependencies are declared inline. Open any notebook interactively with marimo:
+Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) script — dependencies are declared inline.
 
+**Local machine:**
 ```bash
-uvx marimo edit notebooks/nb01_retrieve_profiles.py
+git clone https://github.com/broadinstitute/jx && cd jx && uvx marimo edit
 ```
 
-On first open, marimo will show a **"Missing packages"** prompt listing `polars`, `requests`, and others — click **Install** and it will set up a venv automatically. This is expected; subsequent opens skip it.
+This opens the marimo home screen where you can launch any notebook. On first open, marimo will show a **"Missing packages"** prompt — click **Install** and it sets up a venv automatically. Subsequent opens skip this.
 
-If you're on a **Nix-managed machine** (the shell exports `PYTHONPATH` pointing into the Nix store), marimo will fail with a `websockets` import error before the notebook opens. Unset it first:
+**Remote server** (SSH port forwarding):
+```bash
+# On the server — pick any free port
+git clone https://github.com/broadinstitute/jx && cd jx && uvx marimo edit --host 0.0.0.0 --port 2719
+
+# On your laptop (new terminal)
+ssh -L 2719:localhost:2719 <server>
+```
+
+Then open `http://localhost:2719` in your browser.
+
+If you're on a **Nix-managed machine**, marimo will fail with a `websockets` import error. Prefix with `env -u PYTHONPATH`:
 
 ```bash
-env -u PYTHONPATH uvx marimo edit notebooks/nb01_retrieve_profiles.py
+env -u PYTHONPATH uvx marimo edit
 ```
 
 The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). Download it once to avoid re-fetching on every run:
