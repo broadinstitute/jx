@@ -18,28 +18,27 @@ A starter pack of six notebooks adapted from [JUMP-Hub](https://github.com/jump-
 
 ## Getting started
 
-Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) script — dependencies are declared inline and managed by [uv](https://docs.astral.sh/uv/). To run any notebook standalone:
+Requires Python ≥ 3.11 and [uv](https://docs.astral.sh/uv/).
+
+Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) script — dependencies are declared inline. Open any notebook interactively with marimo:
 
 ```bash
-uv run --script notebooks/nb01_retrieve_profiles.py
+# uv installs dependencies automatically on first run
+uvx marimo edit notebooks/nb01_retrieve_profiles.py
+
+# Nix users: unset PYTHONPATH first to avoid a websockets conflict
+env -u PYTHONPATH uvx marimo edit notebooks/nb01_retrieve_profiles.py
 ```
 
-For interactive exploration, open it in marimo:
-
-```bash
-# Nix users: unset PYTHONPATH first to avoid websockets conflicts
-env -u PYTHONPATH marimo edit notebooks/nb01_retrieve_profiles.py
-```
-
-The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). Cache it first to avoid re-downloading on every run:
+The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). Download it once to avoid re-fetching on every run:
 
 ```bash
 mkdir -p ~/.cache/jx
-curl -L -o ~/.cache/jx/crispr_cosinesim_full.parquet \
-  "https://zenodo.org/api/records/$(curl -s https://zenodo.org/api/records/13259495 | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")/files/crispr_cosinesim_full.parquet/content"
+# Find the file URL at https://zenodo.org/records/13259495, then:
+curl -L -o ~/.cache/jx/crispr_cosinesim_full.parquet <url>
 ```
 
-Or set `JX_CACHE` to point to an existing copy.
+Set `JX_CACHE` to point elsewhere if you prefer a different cache location.
 
 ## License
 
