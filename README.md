@@ -34,7 +34,7 @@ The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine 
 
 ```bash
 mkdir -p ~/.cache/jx
-ZENODO_ID=$(curl -s "https://zenodo.org/api/records/15029005/versions/latest" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+ZENODO_ID=$(curl -sL "https://zenodo.org/api/records/15029005/versions/latest" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
 curl -L -o ~/.cache/jx/crispr_cosinesim_full.parquet \
   "https://zenodo.org/api/records/${ZENODO_ID}/files/crispr_cosinesim_full.parquet/content"
 ```
