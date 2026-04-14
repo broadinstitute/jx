@@ -58,7 +58,7 @@ def sample_submatrix(
 
 @app.function
 def plot_similarity_heatmap(submatrix: pl.DataFrame):
-    """Render a labeled square distance heatmap (0=identical, 2=anticorrelated)."""
+    """Render a labeled square cosine similarity heatmap (1=identical, -1=anticorrelated)."""
     pdf = submatrix.to_pandas()
     pdf.index = pdf.columns
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -66,8 +66,8 @@ def plot_similarity_heatmap(submatrix: pl.DataFrame):
         pdf,
         annot=True,
         fmt=".3f",
-        vmin=0,
-        vmax=2,
+        vmin=-1,
+        vmax=1,
         cmap=sns.color_palette("vlag", as_cmap=True),
         ax=ax,
     )
@@ -86,8 +86,9 @@ def intro():
         [Zenodo](https://zenodo.org/records/13259495) to find phenotypically
         similar perturbations.
 
-        Values range from 0 (identical profiles) through 1 (uncorrelated) to 2
-        (perfectly anticorrelated).
+        Values are cosine similarities ranging from 1 (identical profiles)
+        through 0 (uncorrelated) to -1 (perfectly anticorrelated). Sort
+        descending to find nearest neighbors.
         """
     )
     return

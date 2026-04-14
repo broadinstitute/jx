@@ -184,11 +184,12 @@ These have bitten real composition work. Know them before you debug.
   `get_item_location_metadata` does a duckdb replacement scan against
   `meta_wells`, but `broad_babel.data.get_table("well")` returns a
   path string in that release, not a DataFrame. The fix lives in
-  `~/projects/monorepo/add_ci/libs/{broad_babel,jump_portrait}` — if
-  the user hits this, install both from those local paths via
-  `ctx.install_packages("/home/amunoz/projects/monorepo/add_ci/libs/broad_babel",
-  "/home/amunoz/projects/monorepo/add_ci/libs/jump_portrait")` inside
-  a marimo-pair session. Don't workaround it by reimplementing
+  the `add_ci` branch of the Carpenter-Singh lab monorepo — if
+  the user hits this, install both from that branch via
+  `ctx.install_packages(
+      "git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/broad_babel",
+      "git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/jump_portrait"
+  )` inside a marimo-pair session. Don't workaround it by reimplementing
   `lookup_site_metadata` in the composed notebook — fix the upstream
   package and keep the composed notebook clean.
 - **Nix shells poison `PYTHONPATH`.** On this machine the shell exports
