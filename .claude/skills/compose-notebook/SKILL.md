@@ -126,6 +126,27 @@ Matplotlib figures are displayed with `mo.as_html(fig)` inside an
 `mo.hstack` / `mo.vstack`. Don't rely on the "last expression is the
 output" magic for figures — wrap them explicitly so the layout works.
 
+**Guard expensive steps with a run button.** Marimo re-runs downstream
+cells on every upstream change, which is exactly wrong for things like
+fetching a 250 MB matrix or rendering images from S3. Wrap those cells
+behind `mo.ui.run_button()` + `mo.stop(not run_button.value)` so they
+only execute on explicit user click:
+
+```python
+@app.cell
+def _(mo):
+    run_button = mo.ui.run_button(label="Fetch neighbors")
+    run_button
+    return (run_button,)
+
+@app.cell
+def _(mo, run_button, query_input, dataset_selector):
+    mo.stop(not run_button.value)
+    similarities = load_similarity_matrix(dataset_selector.value)
+    neighbors = nearest_neighbors(similarities, query_input.value, 10)
+    return (neighbors,)
+```
+
 ### 3. Caching large artifacts
 
 The cosine similarity matrices on Zenodo are ~250 MB each. A lazy scan
@@ -162,10 +183,47 @@ When working against a running server via marimo-pair, use `code_mode`
 to create and edit cells — don't write to the `.py` file, the kernel
 owns it while it's open.
 
+### Saving from code_mode
+
+Marimo's `code_mode` edits are live in memory but not auto-saved to disk.
+To persist changes programmatically:
+
+```python
+import marimo._code_mode as cm
+async with cm.get_context() as ctx:
+    doc = ctx._document
+    from marimo._ast.codegen import generate_filecontents
+    from marimo._runtime.context.utils import get_context
+    from pathlib import Path
+
+    names = [c.name if c.name else "_" for c in doc.cells]
+    contents = generate_filecontents(
+        codes=[c.code for c in doc.cells],
+        names=names,
+        cell_configs=[c.config for c in doc.cells],
+    )
+    Path(get_context().filename).write_text(contents)
+```
+
+After saving, restore the `# /// script` PEP 723 header and
+`App(width=...)` config — `generate_filecontents` strips both. Also
+ensure no cell has an empty name (`""`) — replace with `"_"` to avoid
+`_unparsable_cell` wrappers.
+
 ## Known gotchas
 
 These have bitten real composition work. Know them before you debug.
 
+- **Bare widget expressions trigger ruff B018.** Marimo renders the
+  last expression in a cell, so `dataset_dropdown` on a bare line is
+  intentional. Add `# noqa: B018` to suppress the lint warning.
+- **`create_cell` produces empty names.** Cells created via
+  `ctx.create_cell()` get `name=""` instead of `"_"`. Fix names before
+  saving with `generate_filecontents`, or codegen will produce
+  `_unparsable_cell` wrappers.
+- **`generate_filecontents` strips script headers.** The `# /// script`
+  PEP 723 block and `App(width=...)` config are lost on codegen save.
+  Re-add them after writing the file.
 - **Cosine similarity, not distance.** `nb05`'s `load_distance_matrix`
   returns values in `[-1, 1]` where 1 is identical. Sort descending for
   "nearest neighbors". The docstring in that file is misleading and
