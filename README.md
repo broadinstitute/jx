@@ -14,7 +14,7 @@ The idea that notebooks can serve as both documentation and library isn't new �
 
 ## The catalog
 
-An initial starter pack of six notebooks adapted from [JUMP-Hub](https://github.com/jump-cellpainting/jump-hub), covering the building blocks of JUMP analysis: profile retrieval, metadata annotation, morphological activity (mAP), Cell Painting image display, similarity search, and gene annotation. A seventh notebook (`07_compound_neighborhood.py`) is the demo vignette — given a compound of interest, find what's morphologically similar in JUMP, annotate the neighbors with targets, and show the images side by side. It composes the first six and runs end to end.
+An initial starter pack of six notebooks adapted from [JUMP-Hub](https://github.com/jump-cellpainting/jump-hub), covering the building blocks of JUMP analysis: profile retrieval, metadata annotation, morphological activity (mAP), Cell Painting image display, similarity search, and gene annotation. A seventh notebook (`nb07_compound_neighborhood.py`) is the demo vignette — given a compound of interest, find what's morphologically similar in JUMP, annotate the neighbors with targets, and show the images side by side. It composes the first six and runs end to end.
 
 ## Getting started
 
@@ -27,26 +27,13 @@ Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) s
 git clone https://github.com/broadinstitute/jx && cd jx && uvx marimo edit
 ```
 
-This opens the marimo home screen where you can launch any notebook. On first open, marimo will show a **"Missing packages"** prompt — click **Install** and it sets up a venv automatically. Subsequent opens skip this.
-
-**Remote server** (SSH port forwarding):
-```bash
-# On the server — pick any free port
-git clone https://github.com/broadinstitute/jx && cd jx && uvx marimo edit --host 0.0.0.0 --port 2718
-
-# On your laptop (new terminal)
-ssh -L 2718:localhost:2718 <server>
-```
-
-Then open `http://localhost:2718` in your browser.
-
 If you're on a **Nix-managed machine**, marimo will fail with a `websockets` import error. Prefix with `env -u PYTHONPATH`:
 
 ```bash
 env -u PYTHONPATH uvx marimo edit
 ```
 
-The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). 
+The demo vignette (`nb07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). It was built using the previous ones.
 
 ## License
 
