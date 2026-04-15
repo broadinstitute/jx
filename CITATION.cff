@@ -37,9 +37,7 @@ keywords:
   - skill libraries
 version: 0.1.0
 date-released: "2026-04-14"
-# After the first Zenodo release, add the concept DOI here so citations
-# always resolve to the latest version:
-# identifiers:
-#   - type: doi
-#     value: 10.5281/zenodo.XXXXXXX
-#     description: Concept DOI (all versions) on Zenodo
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.19598884
+    description: Concept DOI (all versions) on Zenodo
