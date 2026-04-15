@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use jx in your work, please cite it as below."
+title: "jx: an agent-composable marimo notebook catalog for scientific data exploration"
+abstract: >
+  jx is an experiment in agent-driven scientific data exploration. It pairs a
+  catalog of runnable marimo notebooks — each embodying a real analysis use
+  case and exposing reusable pure functions — with a thin skill file that lets
+  an AI agent compose new analyses from existing notebooks in response to a
+  user's question. The catalog is simultaneously documentation, working code,
+  and a compositional substrate for agents, without the maintenance overhead
+  of a separate library. The initial instantiation targets a large public
+  morphological profiling dataset, but the pattern is dataset-agnostic.
+type: software
+authors:
+  - family-names: Munoz
+    given-names: Alan F.
+    affiliation: "Broad Institute of MIT and Harvard"
+    orcid: "https://orcid.org/0000-0001-8698-5477"
+  - family-names: Gogoberidze
+    given-names: Nodar
+    affiliation: "Broad Institute of MIT and Harvard"
+    orcid: "https://orcid.org/0000-0002-9395-4676"
+  - family-names: Singh
+    given-names: Shantanu
+    affiliation: "Broad Institute of MIT and Harvard"
+    orcid: "https://orcid.org/0000-0003-3150-3025"
+repository-code: "https://github.com/broadinstitute/jx"
+url: "https://github.com/broadinstitute/jx"
+license: BSD-3-Clause
+keywords:
+  - agentic AI
+  - AI agents
+  - scientific notebooks
+  - marimo
+  - reproducible research
+  - computational workflows
+  - skill libraries
+version: 0.1.0
+date-released: "2026-04-14"
+# After the first Zenodo release, add the concept DOI here so citations
+# always resolve to the latest version:
+# identifiers:
+#   - type: doi
+#     value: 10.5281/zenodo.XXXXXXX
+#     description: Concept DOI (all versions) on Zenodo

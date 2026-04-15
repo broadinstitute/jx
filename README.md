@@ -32,13 +32,13 @@ This opens the marimo home screen where you can launch any notebook. On first op
 **Remote server** (SSH port forwarding):
 ```bash
 # On the server — pick any free port
-git clone https://github.com/broadinstitute/jx && cd jx && uvx marimo edit --host 0.0.0.0 --port 2719
+git clone https://github.com/broadinstitute/jx && cd jx && uvx marimo edit --host 0.0.0.0 --port 2718
 
 # On your laptop (new terminal)
-ssh -L 2719:localhost:2719 <server>
+ssh -L 2718:localhost:2718 <server>
 ```
 
-Then open `http://localhost:2719` in your browser.
+Then open `http://localhost:2718` in your browser.
 
 If you're on a **Nix-managed machine**, marimo will fail with a `websockets` import error. Prefix with `env -u PYTHONPATH`:
 
@@ -46,18 +46,7 @@ If you're on a **Nix-managed machine**, marimo will fail with a `websockets` imp
 env -u PYTHONPATH uvx marimo edit
 ```
 
-The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). Download it once to avoid re-fetching on every run:
-
-```bash
-mkdir -p ~/.cache/jx
-ZENODO_ID=$(curl -sL "https://zenodo.org/api/records/15029005/versions/latest" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
-curl -L -o ~/.cache/jx/crispr_cosinesim_full.parquet \
-  "https://zenodo.org/api/records/${ZENODO_ID}/files/crispr_cosinesim_full.parquet/content"
-```
-
-Set `JX_CACHE` to point elsewhere if you prefer a different cache location.
-
-There is no `pyproject.toml` — this repo contains notebooks, not an installable package. `uv sync` will find nothing to do; use `uvx marimo edit` as above.
+The demo vignette (`07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). 
 
 ## License
 
