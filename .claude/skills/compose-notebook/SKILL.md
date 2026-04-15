@@ -85,13 +85,32 @@ the query, click a different neighbor, regenerate images — not to
 produce a single static figure. Lean on marimo's widgets. Two patterns
 carry most of the weight:
 
-- **Inputs** at the top: `mo.ui.dropdown`, `mo.ui.text`, `mo.ui.slider`
-  arranged with `mo.hstack`. Their `.value` feeds the reactive graph.
+- **Sidebar for controls**: consolidate inputs in `mo.sidebar()` so they
+  stay visible while scrolling results. Use `mo.ui.dropdown` for
+  categorical choices, `mo.ui.text` for queries, `mo.ui.slider` for
+  numeric ranges:
+
+  ```python
+  mo.sidebar([
+      mo.md("### Controls"),
+      dataset_select,
+      query_input,
+      k_neighbors,
+      run_button,
+  ])
+  ```
+
 - **`mo.ui.table(df, selection="single")`** for result tables. Its
   `.value` is a `polars.DataFrame` containing the selected rows (or an
   empty DataFrame if nothing's picked). A downstream cell reads that
   selection and re-renders — so clicking a row in a neighbor table can
   drive which image appears below.
+
+- **`mo.ui.plotly` for interactive scatter plots.** Use
+  `mo.ui.plotly(fig, render_mode="webgl")` when you need reactive point
+  selection (e.g., UMAP embeddings, similarity scatter). Its `.value`
+  gives you the selected points. For large point clouds, `webgl` mode
+  keeps rendering responsive.
 
 ```python
 @app.cell
@@ -147,7 +166,56 @@ def _(mo, run_button, query_input, dataset_selector):
     return (neighbors,)
 ```
 
-### 3. Caching large artifacts
+### 3. Selection + paging
+
+When a widget's `.value` drives both a control and a display, split them
+into separate cells. Marimo doesn't let a cell read `.value` from a
+widget it also creates. The pattern:
+
+- **Cell 1** — create the paging slider, output it
+- **Cell 2** — read `page_select.value`, render the page
+
+```python
+@app.cell
+def _(mo, total_pages):
+    page_select = mo.ui.slider(1, total_pages, value=1, label="Page")
+    page_select
+    return (page_select,)
+
+@app.cell
+def _(page_select, items, page_size):
+    start = (page_select.value - 1) * page_size
+    mo.vstack([render(item) for item in items[start : start + page_size]])
+```
+
+### 4. DuckDB for table wrangling
+
+When using DuckDB inside `@app.function` bodies, always create an
+explicit connection. The default connection (`duckdb.sql(...)`) shares a
+single transaction — a failed query poisons it for all subsequent calls:
+
+```python
+con = duckdb.connect()
+result = con.sql("SELECT ... FROM df").pl()
+con.close()
+```
+
+### 5. Plotly dark theme (plotly 6+ compatible)
+
+Use `copy.deepcopy` to derive a custom theme. Direct assignment then
+`.update()` throws ValueError in plotly 6+:
+
+```python
+import copy
+t = copy.deepcopy(pio.templates["plotly_dark"])
+t.layout.paper_bgcolor = "rgba(0,0,0,0)"
+t.layout.plot_bgcolor = "rgba(30,30,30,1)"
+t.layout.font.color = "#e0e0e0"
+t.layout.colorway = px.colors.qualitative.Set2
+pio.templates["marimo_dark"] = t
+```
+
+### 6. Caching large artifacts
 
 The cosine similarity matrices on Zenodo are ~250 MB each. A lazy scan
 over a remote parquet that tries to pull a single row still re-downloads
@@ -214,6 +282,23 @@ ensure no cell has an empty name (`""`) — replace with `"_"` to avoid
 
 These have bitten real composition work. Know them before you debug.
 
+- **ruff F821 on marimo notebooks.** `@app.function` cells reference
+  setup-cell symbols that ruff can't see statically. Add
+  `"notebooks/nb*.py" = ["F821", "F841"]` to
+  `[tool.ruff.lint.per-file-ignores]` in `pyproject.toml`.
+- **`@app.function` with `_` prefix names.** Functions named `_helper()`
+  become private to their cell and can't be called from other cells.
+  Remove the `_` prefix for any function you want to reuse.
+- **Underscore-prefixed variables in DuckDB queries.** `duckdb.sql("FROM _var")`
+  can't resolve `_var` in marimo cells because marimo name-mangles
+  private names. Use non-underscore names for variables referenced in
+  DuckDB SQL.
+- **`mo.stop` shows as "exception" in code_mode.** This is expected —
+  `mo.stop` raises an internal exception. Downstream cells show
+  "cancelled". Both are normal behavior.
+- **plotly 6 template assignment.** Use `copy.deepcopy()` then set
+  attributes. Direct `pio.templates["x"] = pio.templates["y"]` then
+  `.update()` throws ValueError.
 - **Bare widget expressions trigger ruff B018.** Marimo renders the
   last expression in a cell, so `dataset_dropdown` on a bare line is
   intentional. Add `# noqa: B018` to suppress the lint warning.
@@ -276,12 +361,16 @@ images side by side", work through this:
 3. **Draft the notebook with `@app.function` helpers first**, then
    `@app.cell` UI on top. Keep the setup cell to imports, constants,
    and a `sys.path.insert` — nothing reactive.
-4. **Use `mo.ui.table(..., selection="single")` for any result set the
+4. **Use `mo.sidebar` for all controls.** Don't scatter dropdowns across
+   the main area — consolidate them so they stay visible while scrolling.
+5. **Use `mo.ui.table(..., selection="single")` for any result set the
    user might want to click through**, and wire downstream cells to
-   `.value`. That's the difference between a notebook and a figure.
-5. **Run it in a live kernel (marimo-pair) and iterate on cells in
+   `.value`. Use `mo.ui.plotly` with `render_mode="webgl"` for scatter
+   plots that need point selection. That's the difference between a
+   notebook and a figure.
+6. **Run it in a live kernel (marimo-pair) and iterate on cells in
    place.** Don't edit the `.py` file while the kernel has it open.
-6. **After the first successful run, look for anything expensive
+7. **After the first successful run, look for anything expensive
    you're about to repeat on every edit** and cache it.
 
 ## When *not* to use this skill
