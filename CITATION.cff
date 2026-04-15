@@ -35,7 +35,7 @@ keywords:
   - reproducible research
   - computational workflows
   - skill libraries
-version: 0.1.0
+version: 0.0.1
 date-released: "2026-04-14"
 identifiers:
   - type: doi
