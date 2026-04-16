@@ -5,21 +5,21 @@ Painting catalog.
 
 ## Install
 
-From any project that works with JUMP Cell Painting data:
+### Via Claude CLI (recommended)
 
 ```bash
-# One-liner: clone into your project's .claude/skills/
-git clone https://github.com/broadinstitute/jx.git /tmp/jx \
-  && mkdir -p .claude/skills \
-  && cp -r /tmp/jx/.claude/skills/compose-notebook .claude/skills/ \
-  && rm -rf /tmp/jx
+# Add the marketplace
+claude plugin marketplace add broadinstitute/jx
 
-# Or if you already have the repo cloned locally:
-cp -r /path/to/jx/.claude/skills/compose-notebook .claude/skills/
+# Install the skill
+claude plugin install compose-notebook@jx
 ```
 
-The skill is automatically discovered by Claude Code once the `SKILL.md`
-file is in `.claude/skills/compose-notebook/`.
+### Manual
+
+```bash
+cp -r /path/to/jx/.claude/skills/compose-notebook .claude/skills/
+```
 
 ## What it does
 
