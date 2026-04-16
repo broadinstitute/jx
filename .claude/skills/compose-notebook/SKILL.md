@@ -373,6 +373,110 @@ images side by side", work through this:
 7. **After the first successful run, look for anything expensive
    you're about to repeat on every edit** and cache it.
 
+## General marimo patterns
+
+Lessons from building multi-notebook catalogs. These are not
+jx-specific — apply them to any marimo project.
+
+### Setup cell: use `with app.setup`
+
+Use `with app.setup` (requires **marimo >= 0.25**) to declare shared
+imports and constants. Symbols are available to all `@app.function`
+bodies within the notebook AND when imported cross-notebook:
+
+```python
+with app.setup:
+    import duckdb
+    import numpy as np
+    from some_other_notebook import helper_function
+    GLOBAL_SEED = 42
+```
+
+No `return` statement needed — every name is automatically in scope.
+`@app.function` bodies should NOT duplicate these imports. If marimo
+is older than 0.25, fall back to a regular `@app.cell` with an
+explicit `return` of all symbols, but prefer upgrading.
+
+### Default selections for interactive plots
+
+Never use `mo.stop(len(chart.value) == 0)` — it blocks all downstream
+cells until the user manually interacts. Instead, provide a sensible
+default so notebooks run end-to-end without interaction:
+
+```python
+points = chart.value
+if not points:
+    # Default: select negative controls or a random group
+    indices = df.filter(pl.col("control") == "negcon").head(12).row_indices()
+else:
+    indices = [p["pointIndex"] for p in points]
+```
+
+### Plotly 6+ template creation
+
+Use `copy.deepcopy()` then set attributes individually. The old
+`pio.templates["x"] = pio.templates["y"]` + `.update()` pattern
+throws `ValueError` in plotly 6+:
+
+```python
+import copy
+t = copy.deepcopy(pio.templates["plotly_dark"])
+t.layout.paper_bgcolor = "rgba(0,0,0,0)"
+t.layout.plot_bgcolor = "rgba(30,30,30,1)"
+t.layout.font.color = "#e0e0e0"
+pio.templates["my_dark"] = t
+```
+
+### Plotly output rendering
+
+`mo.output.replace(chart)` is more reliable than bare-expression
+rendering for `mo.ui.plotly`. Use it when the chart is the last
+expression but doesn't appear.
+
+### Legend overflow
+
+When a plotly scatter has >20 color categories, collapse rare ones
+into "other" with a muted grey. Give special categories (like
+negative controls) a distinct grey so they visually recede.
+
+### DuckDB in marimo cells
+
+- Use `con = duckdb.connect()` / `con.close()` — never bare
+  `duckdb.sql()` which shares a global connection that breaks on
+  transaction errors.
+- Underscore-prefixed variables (`_var`) can't be resolved by DuckDB's
+  Python-scope lookup in marimo cells due to name mangling. Use
+  non-underscore names for any variable referenced in SQL.
+
+### DataFrame concatenation across sources
+
+When concatenating DataFrames from different sources (e.g., different
+batches), cast numeric columns to a common dtype first to avoid schema
+errors:
+
+```python
+pl.concat([
+    df_a.cast({c: pl.Float64 for c in features}),
+    df_b.cast({c: pl.Float64 for c in features}),
+], how="diagonal")
+```
+
+### Notebook documentation
+
+Each notebook should start with a `mo.md()` cell describing its
+purpose — not code comments. This renders as visible documentation
+when the notebook is opened in the browser.
+
+### Ruff and marimo
+
+`@app.function` bodies reference setup cell symbols that ruff can't
+resolve statically (F821 "undefined name"). Suppress with:
+
+```toml
+[tool.ruff.lint.per-file-ignores]
+"notebooks/nb*.py" = ["F821", "F841"]
+```
+
 ## When *not* to use this skill
 
 - If the user wants to modify an existing catalog notebook (e.g., fix
