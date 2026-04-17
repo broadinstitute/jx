@@ -4,13 +4,21 @@ An experiment in agent-driven scientific data exploration, built around [JUMP Ce
 
 ## The hypothesis
 
-A catalog of real analyses — working [marimo](https://marimo.io) notebooks, each embodying an actual use case — is a better artifact than a Python library, or even an extensive skills library. Each notebook is both a runnable demonstration of a use case and a source of pure functions that other notebooks can [import and reuse](https://docs.marimo.io/guides/reusing_functions/) directly. This means the catalog is simultaneously documentation, working code, and a compositional building block — without the maintenance overhead of a separate library. Outside of reusable functions, existing notebooks have cells which use them to display rich outputs (plots, widgets, tables, etc.). These also are usable as valuable examples for agents to use downstream.
+jx is a catalog of real JUMP analyses — working [marimo](https://marimo.io) notebooks, each embodying an actual use case. The underlying libraries (parquet, polars, duckdb, pooch, [jump-portrait](https://github.com/jump-cellpainting/jump-portrait)) already exist; what's missing is how to use them effectively for this specific dataset. The catalog fills that gap. Each notebook is both a runnable demonstration and a source of pure functions that other notebooks can [import and reuse](https://docs.marimo.io/guides/reusing_functions/) directly. Helper functions sit close to the underlying APIs on purpose — an agent composing a new analysis sees polars, duckdb, and pooch primitives in use, not a wrapper that hides them.
 
 A thin skill file tells an AI agent (Claude Code + [marimo-pair](https://github.com/marimo-team/marimo-pair)) what's in the catalog and how to compose from it. Given a new biological question, the agent picks relevant notebooks, composes their reusable functions into a new notebook, generates any custom glue code, executes it in a live kernel, and hands back a self-contained, re-runnable result. The catalog grows as new analyses are added. The skill stays thin on purpose.
 
+Three properties make this work for agent composition:
+
+- **Cumulative DAG.** Later notebooks import functions from earlier ones. The catalog is not a flat gallery of independent examples — notebook 7 depends on notebooks 1–6, and custom analyses chain further.
+- **Live environment.** marimo-pair gives the agent kernel feedback while composing — running code, inspecting outputs, adjusting — rather than a write-build-inspect loop against a static CI artifact.
+- **Data alongside code.** Each cell ships both the code and its output: computed values, dataframe heads, plots rendered from real JUMP data. An agent sees what functions produce, not just what they accept — composition is grounded in concrete shapes and values, not type hints.
+
 If this works for JUMP, the pattern transfers: new dataset = new catalog + new skill, same machinery.
 
-The idea that notebooks can serve as both documentation and library isn't new — [fast.ai](https://www.fast.ai/) developed its deep learning library this way at scale using [nbdev](https://nbdev.fast.ai/). What's different here is the agent composition angle: rather than publishing a package, the catalog is the substrate an agent reasons over and builds from.
+How far does this pattern go? At a starter pack of six notebooks plus a demo vignette — jx's current scope — a catalog of worked examples beats building a JUMP-specific wrapper library. The conventional software-engineering answer says: at dozens of notebooks with multiple contributors, factoring shared helpers into a package becomes necessary. [fast.ai](https://www.fast.ai/) and [nbdev](https://nbdev.fast.ai/) did exactly this at scale for deep learning.
+
+But that answer assumes human maintainers. In an agentic era — thousands of agents running experiments, chasing hypotheses, and refactoring the catalog itself — the scale at which a library becomes necessary may be much higher, or may not be a fixed boundary at all. If agents can curate the resource and keep the DAG coherent, packaging becomes a choice rather than a requirement, and an older question reopens: what is a library *for*, when agents rather than humans are the primary maintainers of a growing body of analysis?
 
 ## The catalog
 
