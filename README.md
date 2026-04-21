@@ -32,16 +32,19 @@ Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) s
 
 **Local machine:**
 ```bash
-git clone https://github.com/broadinstitute/jx && cd jx && uvx marimo edit
+git clone https://github.com/broadinstitute/jx && cd jx
+uvx marimo edit --sandbox notebooks/nb07_compound_neighborhood.py
 ```
+
+`--sandbox` reads each notebook's PEP 723 header and provisions an isolated venv on the fly - no manual `uv sync` needed. The first launch takes ~2 minutes while deps install; subsequent launches are instant. To browse the catalog instead of opening a specific notebook, drop the filename.
 
 If you're on a **Nix-managed machine**, marimo will fail with a `websockets` import error. Prefix with `env -u PYTHONPATH`:
 
 ```bash
-env -u PYTHONPATH uvx marimo edit
+env -u PYTHONPATH uvx marimo edit --sandbox notebooks/nb07_compound_neighborhood.py
 ```
 
-The demo vignette (`nb07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality). It was built using the previous ones.
+The demo vignette (`nb07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality), cached to `~/.cache/jx/` after the first fetch. It was built using the previous ones.
 
 ## License
 
