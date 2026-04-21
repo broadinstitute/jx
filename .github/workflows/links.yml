@@ -1,0 +1,40 @@
+name: Check links
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.md"
+      - ".github/workflows/links.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "**.md"
+  schedule:
+    - cron: "0 9 * * 1"  # Mondays 09:00 UTC - catches external link rot
+  workflow_dispatch:
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Link check
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --verbose 'README.md' '.claude/skills/**/*.md'
+          fail: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: File issue on scheduled failure
+        if: failure() && github.event_name == 'schedule'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Broken links detected by scheduled lychee run
+          content-filepath: ./lychee/out.md
+          labels: bug, links
