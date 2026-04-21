@@ -26,25 +26,9 @@ An initial starter pack of six notebooks adapted from [JUMP-Hub](https://github.
 
 ## Getting started
 
-Requires Python ≥ 3.11 and [uv](https://docs.astral.sh/uv/).
+Clone this repo, open [Claude Code](https://docs.claude.com/en/docs/claude-code) inside the clone, and ask: *help me get started*. The `getting-started` skill (at [`.claude/skills/getting-started/SKILL.md`](.claude/skills/getting-started/SKILL.md)) installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) plugin), launches the demo notebook (`nb07_compound_neighborhood.py`) in a live marimo kernel, and hands off to the `compose-notebook` skill so you can compose analyses against the catalog.
 
-Each notebook is a self-contained [PEP 723](https://peps.python.org/pep-0723/) script — dependencies are declared inline.
-
-**Local machine:**
-```bash
-git clone https://github.com/broadinstitute/jx && cd jx
-uvx marimo edit --sandbox notebooks/nb07_compound_neighborhood.py
-```
-
-`--sandbox` reads each notebook's PEP 723 header and provisions an isolated venv on the fly - no manual `uv sync` needed. The first launch takes ~2 minutes while deps install; subsequent launches are instant. To browse the catalog instead of opening a specific notebook, drop the filename.
-
-If you're on a **Nix-managed machine**, marimo will fail with a `websockets` import error. Prefix with `env -u PYTHONPATH`:
-
-```bash
-env -u PYTHONPATH uvx marimo edit --sandbox notebooks/nb07_compound_neighborhood.py
-```
-
-The demo vignette (`nb07_compound_neighborhood.py`) queries the all-vs-all cosine similarity matrix from Zenodo (~250 MB per modality), cached to `~/.cache/jx/` after the first fetch. It was built using the previous ones.
+The skill file is the canonical setup doc. Read it directly if you want to run the commands by hand without the agent.
 
 ## License
 
