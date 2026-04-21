@@ -1,1 +1,2 @@
 data/*.duckdb
+rendered/*.json
