@@ -1,0 +1,22 @@
+-- title: Wells per source, faceted by plate type
+-- description: Well-level breakdown joining well + plate, faceted by perturbation modality (COMPOUND, CRISPR, ORF, TARGET2). Shows which sources contributed which kinds of plates.
+
+WITH well_with_type AS (
+    SELECT
+        w.Metadata_Source AS source,
+        p.Metadata_PlateType AS plate_type
+    FROM well w
+    JOIN plate p
+      ON w.Metadata_Source = p.Metadata_Source
+     AND w.Metadata_Plate  = p.Metadata_Plate
+    WHERE p.Metadata_PlateType IN ('COMPOUND', 'CRISPR', 'ORF', 'TARGET2')
+)
+SELECT source, plate_type, COUNT(*) AS n_wells
+FROM well_with_type
+GROUP BY source, plate_type
+
+VISUALISE source AS y, n_wells AS x, plate_type AS fill
+DRAW bar
+FACET plate_type
+  SETTING ncol => 4
+LABEL title => 'JUMP wells per source, faceted by plate type'

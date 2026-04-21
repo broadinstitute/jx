@@ -17,6 +17,8 @@
             python312
             uv
             git
+            just
+            duckdb
             # System dependencies for binary wheels
             zlib
             stdenv.cc.cc.lib

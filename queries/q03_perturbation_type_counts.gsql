@@ -1,0 +1,11 @@
+-- title: Perturbation counts by modality
+-- description: Total perturbations in the JUMP catalog grouped by modality (compound, CRISPR, ORF, controls), pulled from the perturbation table.
+
+SELECT Metadata_perturbation_modality AS modality, COUNT(*) AS n
+FROM perturbation
+GROUP BY modality
+ORDER BY n DESC
+
+VISUALISE modality AS y, n AS x, modality AS fill
+DRAW bar
+LABEL title => 'JUMP perturbations by modality'
