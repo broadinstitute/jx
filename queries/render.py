@@ -63,28 +63,27 @@ def write_readme(entries: list[dict]) -> None:
         "# jx queries",
         "",
         "Catalog of self-contained ggsql queries against the canonical JUMP metadata DuckDB.",
-        "Each `q*.gsql` file answers one question; `just render` regenerates this index.",
+        "Each `q*.gsql` file answers one question; `just render` regenerates this page.",
         "",
-        "Each row links to the rendered SVG (click to enlarge), the `.gsql` source, and the raw Vega-Lite spec — paste the JSON into [vega.github.io/editor](https://vega.github.io/editor) to debug encoding.",
+        "Each entry below shows the rendered SVG (click to enlarge), the `.gsql` source, and the raw Vega-Lite spec — paste the JSON into [vega.github.io/editor](https://vega.github.io/editor) to debug encoding.",
         "",
-        "## Catalog",
-        "",
-        "| | Query | Description |",
-        "|---|---|---|",
     ]
     for e in entries:
+        lines.append(f"## {e['title'] or e['name']}")
+        lines.append("")
         if not e["ok"]:
-            lines.append(f"| (failed) | `{e['name']}.gsql` | {e['description']} |")
+            lines.append(f"_Render failed for [`{e['name']}.gsql`]({e['name']}.gsql)._")
+            lines.append("")
             continue
         svg = f"rendered/{e['name']}.svg"
         spec = f"rendered/{e['name']}.json"
         src = f"{e['name']}.gsql"
-        lines.append(
-            f"| <a href=\"{svg}\"><img src=\"{svg}\" width=\"240\"></a> "
-            f"| **{e['title']}**<br>[`{e['name']}.gsql`]({src}) · [spec]({spec}) "
-            f"| {e['description']} |"
-        )
-    lines.append("")
+        lines.append(f"{e['description']}")
+        lines.append("")
+        lines.append(f"[![{e['title']}]({svg})]({svg})")
+        lines.append("")
+        lines.append(f"Source: [`{e['name']}.gsql`]({src}) · Spec: [`{e['name']}.json`]({spec})")
+        lines.append("")
     README.write_text("\n".join(lines))
 
 
