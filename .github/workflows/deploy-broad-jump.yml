@@ -1,0 +1,115 @@
+name: Deploy broad-jump
+
+# Builds the broad-jump static site (ggsql-wasm + JUMP parquets) and
+# publishes it to GitHub Pages at /jx/broad-jump/.
+#
+# One-time setup: Settings -> Pages -> Source: "GitHub Actions".
+#
+# The ggsql-wasm package isn't on npm; we build it from a pinned branch
+# of shntnu/ggsql (the nix-dev flake fork) and symlink the produced pkg/
+# into broad-jump/node_modules/ggsql-wasm before esbuild runs.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "broad-jump/**"
+      - ".github/workflows/deploy-broad-jump.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout jx
+        uses: actions/checkout@v4
+        with:
+          path: jx
+
+      - name: Checkout ggsql (nix-dev fork)
+        uses: actions/checkout@v4
+        with:
+          repository: shntnu/ggsql
+          ref: nix-dev
+          path: ggsql
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Build ggsql-wasm (release + wasm-opt)
+        working-directory: ggsql
+        run: |
+          nix develop --command bash -c '
+            # library/ produces dist/lib.js with convert_csv / convert_parquet
+            # shims that ggsql-wasm/src/lib.rs imports via wasm-bindgen.
+            # Must be built before wasm-pack.
+            cd ggsql-wasm/library
+            npm install
+            npm run build
+            cd ..
+            wasm-pack build --target web
+            wasm-opt pkg/ggsql_wasm_bg.wasm -o pkg/ggsql_wasm_bg.wasm -Oz --all-features
+          '
+          ls -la ggsql-wasm/pkg/
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install broad-jump dependencies
+        working-directory: jx/broad-jump
+        env:
+          # package.json points at a path that only exists on the author's
+          # machine; tell npm to resolve the local ggsql-wasm into a temp
+          # location and then we re-link it below.
+          npm_config_foreground_scripts: "true"
+        run: |
+          # Rewrite the file: dep to our CI checkout path before install.
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.dependencies['ggsql-wasm'] = 'file:../../ggsql/ggsql-wasm/pkg';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+          npm install
+
+      - name: Build broad-jump
+        working-directory: jx/broad-jump
+        env:
+          GGSQL_ROOT: ${{ github.workspace }}/ggsql
+        run: npm run build
+
+      - name: Stage Pages artifact under /broad-jump/
+        run: |
+          mkdir -p _site/broad-jump
+          cp -r jx/broad-jump/dist/* _site/broad-jump/
+          ls -la _site/broad-jump/ | head
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}broad-jump/
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
