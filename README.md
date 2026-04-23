@@ -24,9 +24,11 @@ How far does it go? A library is pre-factored knowledge - someone decided what w
 
 An initial starter pack of six notebooks adapted from [JUMP-Hub](https://github.com/broadinstitute/jump_hub), covering the building blocks of JUMP analysis: profile retrieval, metadata annotation, morphological activity (mAP), Cell Painting image display, similarity search, and gene annotation. A seventh notebook (`nb07_compound_neighborhood.py`) is the demo vignette — given a compound of interest, find what's morphologically similar in JUMP, annotate the neighbors with targets, and show the images side by side. It composes the first six and runs end to end.
 
+A parallel SQL catalog ([`queries/`](queries/)) holds self-contained [ggsql](https://ggsql.org) files that answer single-chart questions against the canonical JUMP metadata DuckDB — plate/well/perturbation demographics, source breakdowns, joins across the metadata schema. Each `q*.gsql` file is one chart with no Python in the loop; the [`compose-query`](.claude/skills/compose-query/SKILL.md) skill teaches the agent which surface to pick (notebooks for Python-glue analyses, queries for pure-SQL questions).
+
 ## broad-jump — a metadata-only companion surface
 
-Alongside the catalog sits [`broad-jump/`](broad-jump/), a static web demo that runs ggsql (SQL + grammar-of-graphics) in the browser against the 11 JUMP metadata tables flattened to SNAPPY parquet shards on `cellpainting-gallery` (public S3, CORS + range-request enabled). Live at <https://broadinstitute.github.io/jx/broad-jump/>. Deploys on every push that touches `broad-jump/**` via `.github/workflows/deploy-broad-jump.yml`.
+Alongside the catalogs sits [`broad-jump/`](broad-jump/), a static web demo that runs ggsql (SQL + grammar-of-graphics) in the browser against the 11 JUMP metadata tables flattened to SNAPPY parquet shards on `cellpainting-gallery` (public S3, CORS + range-request enabled). Live at <https://broadinstitute.github.io/jx/broad-jump/>. Deploys on every push that touches `broad-jump/**` via `.github/workflows/deploy-broad-jump.yml`.
 
 The agent-facing counterpart is the [`broad-jump` skill](.claude/skills/broad-jump/SKILL.md), which teaches a Claude Code session to compose new SQL or ggsql queries against the same data (using the local DuckDB at `queries/data/jump_metadata.duckdb` or the S3 parquets), points at [`broad-jump/src/examples.ts`](broad-jump/src/examples.ts) as a pre-vetted vignette library, and enforces the JUMP-specific gotchas the browser UI already hides (modality casing, plate-type casing, `compound_source` being many-to-many). Install it into any Claude Code project with:
 
@@ -34,9 +36,9 @@ The agent-facing counterpart is the [`broad-jump` skill](.claude/skills/broad-ju
 npx skills add broadinstitute/jx --skill broad-jump
 ```
 
-(See [skills.sh](https://skills.sh) for the ecosystem. Use `--skill '*'` to get both `broad-jump` and `compose-notebook`.)
+(See [skills.sh](https://skills.sh) for the ecosystem. Use `--skill '*'` to get all three skills: `broad-jump`, `compose-query`, `compose-notebook`.)
 
-Deliberately metadata-only. When a question needs morphological features, images, or similarity matrices, stop and use the marimo catalog — `broad-jump` has none of that and isn't trying to.
+Deliberately metadata-only, and overlapping in scope with `queries/`. The split is by runtime: `queries/` is a committed file-on-disk gallery rendered via `just render`; `broad-jump/` is the browser-runnable view of the same data shape. When a question needs morphological features, images, or similarity matrices, stop and use the marimo catalog — neither SQL surface has any of that.
 
 ## Getting started
 

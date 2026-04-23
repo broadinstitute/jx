@@ -7,6 +7,8 @@ description: Compose a new marimo notebook in the jx repo by reusing @app.functi
 
 ## What this skill is for
 
+If the question is answerable as a single SQL query plus a chart against the canonical JUMP metadata DuckDB (plate/well/perturbation/compound demographics, source breakdowns, joins across the metadata schema), reach for the parallel SQL catalog at `queries/q*.gsql` and the [`compose-query`](../compose-query/SKILL.md) skill — it's a much lighter surface than spinning up a marimo notebook. Use this skill when the question genuinely needs Python glue: image fetching, AnnData profiles, broad-babel ID translation, copairs computation, similarity matrices, NCBI lookups.
+
 The jx repo holds a catalog of marimo notebooks (`notebooks/nb01_*.py` through
 `notebooks/nb06_*.py`) whose top-level `@app.function` helpers do all the
 expensive plumbing for JUMP Cell Painting: loading profiles, attaching

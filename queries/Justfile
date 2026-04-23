@@ -1,0 +1,22 @@
+ggsql := env_var_or_default("GGSQL", "ggsql")
+db    := "data/jump_metadata.duckdb"
+
+default:
+    @just --list
+
+# Build the canonical jump_metadata.duckdb from a sibling clone of jump-cellpainting/datasets.
+# Override the source dir with: just datasets=path/to/datasets setup
+datasets := "../../datasets"
+setup:
+    @test -d {{datasets}}/metadata || (echo "Need a clone of jump-cellpainting/datasets at {{datasets}}/. Override with 'just datasets=PATH setup'." && exit 1)
+    @rm -f {{db}}
+    cd {{datasets}}/metadata && duckdb {{justfile_directory()}}/{{db}} < db/setup.sql
+    @echo "Built {{db}}"
+
+# Render every q*.gsql to SVG + Vega-Lite JSON, regenerate README catalog.
+render:
+    uv run --with vl-convert-python --with rich python3 render.py
+
+# Trash all rendered artifacts.
+clean:
+    trash rendered/*.svg rendered/*.json 2>/dev/null || true

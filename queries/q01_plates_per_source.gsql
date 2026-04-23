@@ -1,0 +1,13 @@
+-- title: Plates per source by plate type
+-- description: Composition of JUMP plates across the 13 data-generating sources, stacked by plate type.
+
+SELECT
+    Metadata_Source AS source,
+    Metadata_PlateType AS plate_type,
+    COUNT(*) AS n_plates
+FROM plate
+GROUP BY source, plate_type
+
+VISUALISE source AS y, n_plates AS x, plate_type AS fill
+DRAW bar
+LABEL title => 'JUMP plates per source, by plate type'
