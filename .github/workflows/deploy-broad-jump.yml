@@ -52,7 +52,13 @@ jobs:
         working-directory: ggsql
         run: |
           nix develop --command bash -c '
-            cd ggsql-wasm
+            # library/ produces dist/lib.js with convert_csv / convert_parquet
+            # shims that ggsql-wasm/src/lib.rs imports via wasm-bindgen.
+            # Must be built before wasm-pack.
+            cd ggsql-wasm/library
+            npm install
+            npm run build
+            cd ..
             wasm-pack build --target web
             wasm-opt pkg/ggsql_wasm_bg.wasm -o pkg/ggsql_wasm_bg.wasm -Oz --all-features
           '
