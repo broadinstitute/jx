@@ -81,7 +81,7 @@ jobs:
           node -e "
             const fs = require('fs');
             const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            pkg.dependencies['ggsql-wasm'] = 'file:../../../ggsql/ggsql-wasm/pkg';
+            pkg.dependencies['ggsql-wasm'] = 'file:../../ggsql/ggsql-wasm/pkg';
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
           "
           npm install
