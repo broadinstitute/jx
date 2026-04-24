@@ -30,13 +30,7 @@ A parallel SQL catalog ([`queries/`](queries/)) holds self-contained [ggsql](htt
 
 Alongside the catalogs sits [`broad-jump/`](broad-jump/), a static web demo that runs ggsql (SQL + grammar-of-graphics) in the browser against the 11 JUMP metadata tables flattened to SNAPPY parquet shards on `cellpainting-gallery` (public S3, CORS + range-request enabled). Live at <https://broadinstitute.github.io/jx/broad-jump/>. Deploys on every push that touches `broad-jump/**` via `.github/workflows/deploy-broad-jump.yml`.
 
-The agent-facing counterpart is the [`broad-jump` skill](.claude/skills/broad-jump/SKILL.md), which teaches a Claude Code session to compose new SQL or ggsql queries against the same data (using the local DuckDB at `queries/data/jump_metadata.duckdb` or the S3 parquets), points at [`broad-jump/src/examples.ts`](broad-jump/src/examples.ts) as a pre-vetted vignette library, and enforces the JUMP-specific gotchas the browser UI already hides (modality casing, plate-type casing, `compound_source` being many-to-many). Install it into any Claude Code project with:
-
-```bash
-npx skills add broadinstitute/jx --skill broad-jump
-```
-
-(See [skills.sh](https://skills.sh) for the ecosystem. Use `--skill '*'` to get all three skills: `broad-jump`, `compose-query`, `compose-notebook`.)
+The agent-facing counterpart is the [`broad-jump` skill](.claude/skills/broad-jump/SKILL.md), which teaches a Claude Code session to compose new SQL or ggsql queries against the same data (using the local DuckDB at `queries/data/jump_metadata.duckdb` or the S3 parquets), points at [`broad-jump/src/examples.ts`](broad-jump/src/examples.ts) as a pre-vetted vignette library, and enforces the JUMP-specific gotchas the browser UI already hides (modality casing, plate-type casing, `compound_source` being many-to-many).
 
 Deliberately metadata-only, and overlapping in scope with `queries/`. The split is by runtime: `queries/` is a committed file-on-disk gallery rendered via `just render`; `broad-jump/` is the browser-runnable view of the same data shape. When a question needs morphological features, images, or similarity matrices, stop and use the marimo catalog — neither SQL surface has any of that.
 
