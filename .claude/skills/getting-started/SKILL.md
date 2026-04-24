@@ -1,6 +1,14 @@
 ---
 name: getting-started
-description: Walk a first-time jx user from a fresh clone to a running marimo kernel with agent composition enabled. Trigger when the user says "help me get started", "onboard me", "set me up", "I'm new to jx", "first time using jx", "what do I do next", or asks any JUMP-composition question before a marimo kernel is running and marimo-pair is connected. Sets up uv, prompts the user to install the marimo-pair plugin, launches the marimo server on nb07. Use before compose-notebook: once setup is verified, hand off to that skill for the actual analysis.
+description: >-
+  Walk a first-time jx user from a fresh clone to a running marimo kernel
+  with agent composition enabled. Trigger when the user says "help me get
+  started", "onboard me", "set me up", "I'm new to jx", "first time using
+  jx", "what do I do next", or asks any JUMP-composition question before a
+  marimo kernel is running and marimo-pair is connected. Sets up uv, prompts
+  the user to install the marimo-pair skill, launches the marimo server on
+  nb07. Use before compose-notebook: once setup is verified, hand off to
+  that skill for the actual analysis.
 ---
 
 # Getting started with jx
