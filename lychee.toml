@@ -1,0 +1,7 @@
+# External sites like marimo.io rate-limit unauthenticated checks with 429;
+# treating 429 as non-failure keeps the link check focused on real rot.
+accept = ["200..=299", "429"]
+
+# Retry once with backoff for transient network blips.
+max_retries = 2
+retry_wait_time = 5
