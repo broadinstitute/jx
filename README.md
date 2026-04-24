@@ -30,6 +30,17 @@ Clone this repo, open [Claude Code](https://code.claude.com/docs) inside the clo
 
 The skill file is the canonical setup doc. Read it directly if you want to run the commands by hand without the agent.
 
+## Install the skills elsewhere
+
+All three skills in `.claude/skills/` are published via [skills.sh](https://skills.sh). Install into any Claude Code project:
+
+```bash
+npx skills add broadinstitute/jx --skill '*'
+# or individually: --skill compose-notebook, --skill compose-query, --skill getting-started
+```
+
+The skills reference paths inside a jx clone (e.g. `notebooks/nb01_*.py`, `queries/data/jump_metadata.duckdb`), so they're most useful when run from a jx checkout.
+
 ## License
 
 BSD 3-Clause — see [LICENSE](LICENSE).
