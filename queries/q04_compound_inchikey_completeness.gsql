@@ -1,0 +1,24 @@
+-- title: Compound InChIKey completeness by source
+-- description: For each compound source, how many compounds have a valid InChIKey vs are missing one (NULL, empty, 'NA', or wrong length). Every JUMP source currently resolves 100%.
+
+WITH annotated AS (
+    SELECT
+        cs.Metadata_Compound_Source AS source,
+        CASE
+            WHEN c.Metadata_InChIKey IS NULL
+              OR c.Metadata_InChIKey IN ('', 'NA')
+              OR length(c.Metadata_InChIKey) != 27
+            THEN 'missing'
+            ELSE 'present'
+        END AS inchikey_status
+    FROM compound_source cs
+    LEFT JOIN compound c
+      ON cs.Metadata_JCP2022 = c.Metadata_JCP2022
+)
+SELECT source, inchikey_status, COUNT(*) AS n_compounds
+FROM annotated
+GROUP BY source, inchikey_status
+
+VISUALISE source AS y, n_compounds AS x, inchikey_status AS fill
+DRAW bar
+LABEL title => 'Compound InChIKey completeness per source'

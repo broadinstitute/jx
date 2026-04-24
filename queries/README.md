@@ -28,3 +28,19 @@ Total perturbations in the JUMP catalog grouped by modality (compound, CRISPR, O
 [![Perturbation counts by modality](rendered/q03_perturbation_type_counts.svg)](rendered/q03_perturbation_type_counts.svg)
 
 Source: [`q03_perturbation_type_counts.gsql`](q03_perturbation_type_counts.gsql)
+
+## Compound InChIKey completeness by source
+
+For each compound source, how many compounds have a valid InChIKey vs are missing one (NULL, empty, 'NA', or wrong length). Every JUMP source currently resolves 100%.
+
+[![Compound InChIKey completeness by source](rendered/q04_compound_inchikey_completeness.svg)](rendered/q04_compound_inchikey_completeness.svg)
+
+Source: [`q04_compound_inchikey_completeness.gsql`](q04_compound_inchikey_completeness.gsql)
+
+## Compound counts per source (shared vs unique)
+
+JUMP catalogs 115,796 unique compounds across 12 sources. Each source's bar is split by whether the compound is unique to that source or also appears in at least one other source; source_3 and source_7 have the largest shared fractions.
+
+[![Compound counts per source (shared vs unique)](rendered/q05_compound_counts_per_source.svg)](rendered/q05_compound_counts_per_source.svg)
+
+Source: [`q05_compound_counts_per_source.gsql`](q05_compound_counts_per_source.gsql)

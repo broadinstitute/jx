@@ -1,0 +1,24 @@
+-- title: Compound counts per source (shared vs unique)
+-- description: JUMP catalogs 115,796 unique compounds across 12 sources. Each source's bar is split by whether the compound is unique to that source or also appears in at least one other source; source_3 and source_7 have the largest shared fractions.
+
+WITH pair_counts AS (
+    SELECT
+        cs.Metadata_Compound_Source AS source,
+        cs.Metadata_JCP2022 AS jcp,
+        COUNT(cs2.Metadata_Compound_Source) AS n_other_sources
+    FROM compound_source cs
+    LEFT JOIN compound_source cs2
+      ON cs.Metadata_JCP2022 = cs2.Metadata_JCP2022
+     AND cs.Metadata_Compound_Source != cs2.Metadata_Compound_Source
+    GROUP BY cs.Metadata_Compound_Source, cs.Metadata_JCP2022
+)
+SELECT
+    source,
+    CASE WHEN n_other_sources = 0 THEN 'unique to this source' ELSE 'shared with other sources' END AS sharing_status,
+    COUNT(*) AS n_compounds
+FROM pair_counts
+GROUP BY source, sharing_status
+
+VISUALISE source AS y, n_compounds AS x, sharing_status AS fill
+DRAW bar
+LABEL title => 'JUMP compounds per source (115,796 unique total)'
