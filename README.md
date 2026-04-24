@@ -26,20 +26,11 @@ A parallel SQL catalog ([`queries/`](queries/)) holds self-contained [ggsql](htt
 
 ## Getting started
 
-Clone this repo, open [Claude Code](https://code.claude.com/docs) inside the clone, and ask: *help me get started*. The `getting-started` skill (at [`.claude/skills/getting-started/SKILL.md`](.claude/skills/getting-started/SKILL.md)) installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) plugin), launches the demo notebook (`nb07_compound_neighborhood.py`) in a live marimo kernel, and hands off to the `compose-notebook` skill so you can compose analyses against the catalog.
+Clone this repo, open [Claude Code](https://code.claude.com/docs) inside the clone, and ask: *help me get started*. The `getting-started` skill (at [`.claude/skills/getting-started/SKILL.md`](.claude/skills/getting-started/SKILL.md)) installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) skill), launches the demo notebook (`nb07_compound_neighborhood.py`) in a live marimo kernel, and hands off to the `compose-notebook` skill so you can compose analyses against the catalog. Claude Code auto-loads `.claude/skills/` from the working directory, so no separate install step is needed.
 
 The skill file is the canonical setup doc. Read it directly if you want to run the commands by hand without the agent.
 
-## Install the skills elsewhere
-
-All three skills in `.claude/skills/` are published via [skills.sh](https://skills.sh). Install into any Claude Code project:
-
-```bash
-npx skills add broadinstitute/jx --skill '*'
-# or individually: --skill compose-notebook, --skill compose-query, --skill getting-started
-```
-
-The skills reference paths inside a jx clone (e.g. `notebooks/nb01_*.py`, `queries/data/jump_metadata.duckdb`), so they're most useful when run from a jx checkout.
+> **Why no `npx skills add broadinstitute/jx`?** The skills here reference in-repo paths (the notebook catalog, `queries/data/jump_metadata.duckdb`, rendered SVGs) and only work alongside that substrate — installing the markdown into an unrelated project leaves the skill with dangling pointers. Clone the repo; that's the install.
 
 ## License
 
