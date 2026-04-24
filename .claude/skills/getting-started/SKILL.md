@@ -19,17 +19,18 @@ Run `uv --version`. If it fails, tell the user to run:
 Then have them source their shell profile (`. ~/.zshrc`) or open a new
 terminal. Re-check `uv --version`.
 
-### 2. Verify the marimo-pair plugin is installed
+### 2. Install the marimo-pair skill
 
-You cannot install a Claude Code plugin on the user's behalf - plugin
-install is a slash command they run in their Claude Code UI. Ask them
-to run:
+marimo-pair is a self-contained skill (SKILL.md + bundled `scripts/`)
+distributed via [skills.sh](https://skills.sh). Install it globally for
+the user:
 
-    /plugin marketplace add marimo-team/marimo-pair
-    /plugin install marimo-pair@marimo-team-marimo-pair
+    npx skills add marimo-team/marimo-pair -g --agent claude-code -y
 
-After they do, marimo-pair's tools (e.g. `execute_code`) appear in the
-session. If you don't see those tools, the plugin isn't loaded yet.
+After install, the user should restart their Claude Code session so the
+skill loads. On the next session, marimo-pair's tools (e.g. running
+`scripts/execute-code.sh`) are available via its `allowed-tools`
+frontmatter. If you don't see the skill, it isn't loaded yet.
 
 ### 3. Launch the marimo server
 
@@ -77,8 +78,8 @@ Once the kernel is live and marimo-pair is connected:
 - Don't write JUMP query code before setup is verified - you'll burn
   the user's time debugging import errors and missing deps.
 - Don't vendor marimo-pair into this repo. It's upstream at
-  `marimo-team/marimo-pair`; installing via the plugin marketplace
-  keeps users current with fixes.
+  `marimo-team/marimo-pair`; installing via `npx skills add` keeps
+  users current with fixes.
 - Don't bypass `compose-notebook` after setup completes. The whole
   point is composition from the catalog; writing ad-hoc queries
   defeats the skill's purpose.
