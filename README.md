@@ -37,3 +37,7 @@ BSD 3-Clause — see [LICENSE](LICENSE).
 ## Status
 
 Active experiment by a team at the Broad Institute. Watch this repo for periodic updates as the hypothesis develops.
+
+## Archived branches
+
+- **`broad-jump-wasm`** — static [ggsql-wasm](https://ggsql.org/wasm/) explorer over JUMP metadata parquets, shipped then reverted from `main` ([PR #4](https://github.com/broadinstitute/jx/pull/4)). Preserved as a pointer to the pre-revert state; ggsql is now a separate track from the jx notebook catalog. Check out the branch to resurrect the demo.
