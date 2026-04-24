@@ -5,21 +5,13 @@ Painting catalog.
 
 ## Install
 
-### Via Claude CLI (recommended)
+Via [skills.sh](https://skills.sh):
 
 ```bash
-# Add the marketplace
-claude plugin marketplace add broadinstitute/jx
-
-# Install the skill
-claude plugin install compose-notebook@jx
+npx skills add broadinstitute/jx --skill compose-notebook
 ```
 
-### Manual
-
-```bash
-cp -r /path/to/jx/.claude/skills/compose-notebook .claude/skills/
-```
+Or pull all three jx skills at once with `--skill '*'`.
 
 ## What it does
 
