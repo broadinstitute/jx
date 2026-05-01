@@ -45,8 +45,8 @@ Tables you'll actually use:
 |---|---|---|
 | `plate` | ~2.5K | `Metadata_Source`, `Metadata_Batch`, `Metadata_Plate`, `Metadata_PlateType` |
 | `well` | ~1.15M | `Metadata_Source`, `Metadata_Plate`, `Metadata_Well`, `Metadata_JCP2022` |
-| `perturbation` | varies | `Metadata_JCP2022`, `Metadata_pert_type` |
-| `perturbation_control` | small | controls only — `Metadata_JCP2022`, `Metadata_pert_type`, `Metadata_Name` |
+| `perturbation` | varies | `Metadata_JCP2022`, `Metadata_perturbation_modality` (compound / crispr / orf) — covers every perturbation |
+| `perturbation_control` | small | controls only — `Metadata_JCP2022`, `Metadata_pert_type` (negcon / poscon / empty), `Metadata_Name`. Note `pert_type` lives **only** here; treatments are wells whose JCP2022 isn't in this table |
 | `compound` | ~116K | `Metadata_JCP2022`, `Metadata_InChIKey`, `Metadata_InChI`, `Metadata_SMILES` |
 | `compound_source` | varies | provenance per (`Metadata_JCP2022`, source) |
 | `crispr` | ~8K | CRISPR perturbation metadata |
@@ -95,15 +95,42 @@ The `WITH base AS (...)` step is conventional even for simple queries — it mak
 
 ## Workflow
 
-1. Pick the next `q<NN>_<topic>.gsql` filename (look at the highest existing number).
-2. Write the file with the required `-- title:` and `-- description:` headers and a self-contained query body.
-3. Run `just render` from `queries/`. It will:
+1. **Sketch the answer in raw DuckDB first.** Open `duckdb queries/data/jump_metadata.duckdb` (or run a one-shot `duckdb ... -c "..."`) and write the SELECT until the numbers look right. DuckDB's parser is permissive, so this lets you nail the *logic* before fighting ggsql's stricter parser. It also gives you a sanity-check total to put in the `-- description:` line.
+2. **Iterate the ggsql draft against a temp file**, not via `just render`. `just render` runs every query in the catalog and only surfaces parse errors at the end — slow when you're debugging one file. Instead, write your draft to `/tmp/draft.gsql` and run, from inside `queries/`:
+   ```bash
+   ggsql run --reader 'duckdb://data/jump_metadata.duckdb' \
+             --writer 'vegalite:///tmp/out.json' \
+             /tmp/draft.gsql
+   ```
+   You'll get either Vega-Lite JSON on stdout (success) or a single parse error. The `--reader` path is relative to your CWD, so `cd queries/` first. See "Known gotchas" below for the parser quirks that cause most of the parse errors you'll hit.
+3. **Pick the next `q<NN>_<topic>.gsql` filename** (look at the highest existing number) and move the working draft into place with the required `-- title:` and `-- description:` headers.
+4. **Run `just render`** from `queries/` to:
    - run `ggsql run` for each `q*.gsql` and capture the Vega-Lite JSON spec
    - generate an `.svg` thumbnail via `vl-convert`
    - regenerate `README.md` with the catalog table
-4. Read your own README.md to see the new entry in context. If the title or description reads poorly next to the others, edit the headers and re-render. Click the SVG to view full size; paste the JSON spec into [vega.github.io/editor](https://vega.github.io/editor) to debug encoding.
+5. **Read your own README.md** to see the new entry in context. If the title or description reads poorly next to the others, edit the headers and re-render. Click the SVG to view full size; paste the JSON spec into [vega.github.io/editor](https://vega.github.io/editor) to debug encoding.
 
 ## Known gotchas
+
+### SQL parser quirks (verified on ggsql v0.3.1)
+
+ggsql's parser is mostly DuckDB-compatible — multiple top-level CTEs, FROM-subqueries, `COUNT(DISTINCT)`, `FULL OUTER JOIN`, and correlated scalar subqueries all work. The narrow set of patterns that *do* fail (all with the same opaque `Parse error: Parse tree contains errors` message) are easy to miss because the message gives you nothing to grep on.
+
+**The general rule** that covers most parse failures: ggsql balks at scalar or aggregate functions wrapping a *non-trivial computed expression* — `CASE … END`, `FILTER (WHERE …)`, or a window expression. The fix is always the same shape: lift the inner expression into a CTE column, then apply the wrapping function in the outer SELECT. Concrete cases:
+
+- **Aggregate over `CASE`**: `SUM(CASE WHEN…)`, `COUNT(CASE WHEN…)`, `MAX(CASE WHEN…)` all parse-error. Lift to a CTE: `WITH x AS (SELECT CASE WHEN cond THEN 1 ELSE 0 END AS flag FROM t) SELECT SUM(flag) FROM x`.
+- **`FILTER` clause**: `COUNT(*) FILTER (WHERE …)` doesn't parse. Same lift-to-CTE workaround, or push the predicate into the CTE's `WHERE`.
+- **Scalar function over a window expression**: `ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2)` parse-errors. Compute the window expression as a CTE column (`pct_raw`), then `ROUND(pct_raw, 2)` in the outer SELECT.
+
+One non-parse trap that fits the same pattern:
+
+- **DuckDB-specific boolean aggregates** like `BOOL_OR` / `BOOL_AND` parse but don't bind on VARCHAR (they expect BOOLEAN). For "does any row match?" over a string column, use `MAX(col IS NOT NULL)` lifted into a CTE, or `COUNT(col)` (which skips NULLs).
+
+When `ggsql run` prints `Parse error: Parse tree contains errors` and your query doesn't obviously match the patterns above, isolate by deleting clauses one at a time. Each individual error is opaque, but the structure usually narrows to a single expression once you've stripped the rest — and the fix is almost always "lift it into a CTE column."
+
+If `ggsql --version` shows something older than 0.3.1, more patterns are restricted (notably multiple top-level CTEs, FROM-subqueries, `COUNT(DISTINCT)`, and `FULL OUTER JOIN` were all broken in 0.2.7) — the cleanest fix is to upgrade.
+
+### Rendering / CLI gotchas
 
 - **HTTPFS does not work** in ggsql v0.2.7. `INSTALL httpfs; LOAD httpfs;` inside a `.gsql` file is silently ignored. Stick to local DuckDB files. (Tracking upstream.)
 - **The `--reader` URI parser drops leading slashes** — absolute paths fail silently and create phantom DuckDB files at the wrong relative path. Always use relative paths from `queries/`. ([posit-dev/ggsql#345](https://github.com/posit-dev/ggsql/issues/345))
