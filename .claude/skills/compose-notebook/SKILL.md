@@ -288,13 +288,18 @@ These have bitten real composition work. Know them before you debug.
   setup-cell symbols that ruff can't see statically. Add
   `"notebooks/nb*.py" = ["F821", "F841"]` to
   `[tool.ruff.lint.per-file-ignores]` in `pyproject.toml`.
-- **`@app.function` with `_` prefix names.** Functions named `_helper()`
-  become private to their cell and can't be called from other cells.
-  Remove the `_` prefix for any function you want to reuse.
-- **Underscore-prefixed variables in DuckDB queries.** `duckdb.sql("FROM _var")`
-  can't resolve `_var` in marimo cells because marimo name-mangles
-  private names. Use non-underscore names for variables referenced in
-  DuckDB SQL.
+- **Marimo mangles names starting with `_`.** Any name beginning with
+  an underscore is treated as cell-local and rewritten at compile
+  time, so it cannot be referenced from another cell -- including
+  from `app.setup` to a regular cell. This manifests in three places:
+  (1) an `@app.function` helper named `_helper()` called from another
+  cell (`NameError`); (2) a setup-block constant like `_DEFAULT_X`
+  read from a cell (e.g. `mo.ui.text(value=_DEFAULT_X)` raises
+  `NameError`); (3) a variable referenced from DuckDB SQL
+  (`duckdb.sql("FROM _var")` can't resolve it). The fix is uniform:
+  drop the leading underscore for anything visible across cells.
+  Reserve `_x` for genuinely cell-private scratch (loop variables,
+  intermediate values used only inside the cell that defines them).
 - **`mo.stop` shows as "exception" in code_mode.** This is expected —
   `mo.stop` raises an internal exception. Downstream cells show
   "cancelled". Both are normal behavior.
