@@ -22,6 +22,18 @@ How far does it go? A library is pre-factored knowledge - someone decided what w
 
 An initial starter pack of six notebooks adapted from [JUMP-Hub](https://github.com/broadinstitute/jump_hub), covering the building blocks of JUMP analysis: profile retrieval, metadata annotation, morphological activity (mAP), Cell Painting image display, similarity search, and gene annotation. A seventh notebook (`nb07_compound_neighborhood.py`) is the demo vignette — given a compound of interest, find what's morphologically similar in JUMP, annotate the neighbors with targets, and show the images side by side. It composes the first six and runs end to end.
 
+Each notebook ships with a committed session snapshot under [`notebooks/__marimo__/session/`](notebooks/__marimo__/session/) so the molab preview renders cell outputs (plots, tables, dropdowns) without re-executing. Click a badge to view the rendered notebook in [molab](https://docs.marimo.io/guides/molab/), or fork it from there.
+
+| Notebook | Role | Preview |
+|---|---|---|
+| [`nb01_retrieve_profiles.py`](notebooks/nb01_retrieve_profiles.py) | Pull JUMP profile parquets via the manifest | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb01_retrieve_profiles.py) |
+| [`nb02_add_metadata.py`](notebooks/nb02_add_metadata.py) | Annotate JCP2022 IDs with compound/gene metadata | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb02_add_metadata.py) |
+| [`nb03_calculate_activity.py`](notebooks/nb03_calculate_activity.py) | Per-perturbation morphological activity (mAP) | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb03_calculate_activity.py) |
+| [`nb04_display_images.py`](notebooks/nb04_display_images.py) | Pull and display Cell Painting images from S3 | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb04_display_images.py) |
+| [`nb05_explore_similarity.py`](notebooks/nb05_explore_similarity.py) | Cosine similarity neighbors over Zenodo matrices | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb05_explore_similarity.py) |
+| [`nb06_query_genes.py`](notebooks/nb06_query_genes.py) | Resolve gene symbols and pull annotations | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb06_query_genes.py) |
+| [`nb07_compound_neighborhood.py`](notebooks/nb07_compound_neighborhood.py) | End-to-end: compound -> neighbors -> targets -> images | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb07_compound_neighborhood.py) |
+
 A parallel SQL catalog ([`queries/`](queries/)) holds self-contained [ggsql](https://ggsql.org) files that answer single-chart questions against the canonical JUMP metadata DuckDB — plate/well/perturbation demographics, source breakdowns, joins across the metadata schema. Each `q*.gsql` file is one chart with no Python in the loop; the [`compose-query`](.claude/skills/compose-query/SKILL.md) skill teaches the agent which surface to pick (notebooks for Python-glue analyses, queries for pure-SQL questions).
 
 ## Getting started
