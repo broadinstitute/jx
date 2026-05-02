@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["marimo", "polars", "requests", "broad-babel", "copairs", "seaborn", "matplotlib"]
+# dependencies = ["marimo", "polars", "pyarrow", "requests", "broad-babel", "copairs", "seaborn", "matplotlib"]
 # ///
 
 import marimo
