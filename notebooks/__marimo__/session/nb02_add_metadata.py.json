@@ -1,0 +1,204 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.1",
+    "script_metadata_hash": "d6560620de7cc118b4ee18d48a58247d"
+  },
+  "cells": [
+    {
+      "id": "setup",
+      "code_hash": "37e7085116d1834d46bc365d9ad65332",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "52b80a518932cc9f12c1c8332a70f6d2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "4224cc32757b1cbfe5b7d60879714136",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "eda468b44c86eb056cf10d43e51f3c4b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "d5d04b6783811871336124c2c88f663f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "e4964bcf1b11a901735df4cf542181e0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"add-metadata-to-profiles\">Add metadata to profiles</h1>\n<span class=\"paragraph\">Morphological profiles ship with minimal metadata (source, plate, well, JCP ID).\nUse <a href=\"https://github.com/broadinstitute/monorepo/tree/main/libs/jump_babel\" rel=\"noopener noreferrer\" target=\"_blank\">broad-babel</a>\nto expand: perturbation type (<code>trt</code>, <code>negcon</code>, <code>poscon</code>) and standard gene/compound names.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "c316d3b6abfa4532dfc76cb4de62a23c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-0' random-id='4f4809ad-df98-a122-56c2-53ca6a071506'><marimo-dropdown data-initial-value='[&quot;crispr&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Dataset&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;crispr&quot;,&quot;orf&quot;,&quot;compound&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element><marimo-ui-element object-id='PKri-1' random-id='7f73a1f6-1057-8255-03ed-65f6861b7486'><marimo-slider data-initial-value='10' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Number of samples&lt;/span&gt;&lt;/span&gt;&quot;' data-start='5' data-stop='50' data-step='5' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "d39823def95764d2807cbfea9ed80e7b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "274c67d680198578b569b32133135924",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "34ff461abb5e9b0bba697b3e94c33b52",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"perturbation-type-mapper\">Perturbation type mapper</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "bb91432b694a184a884ea0df2d3572a9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='RGSE-0' random-id='f875a33b-b75d-a89d-7c38-f29fb5d2b75f'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806326&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806489&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_805589&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804826&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804689&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801000&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801657&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_802541&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807446&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;}]&quot;' data-total-rows='11' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;pert_type&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "cd9a221164ce813984c19d1423133bae",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"standard-name-mapper\">Standard name mapper</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "5bdf7f394776eded4a760a5fc6e35f59",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='emfo-0' random-id='d2b1b8c0-10c7-5aef-ca2b-55883c987a7f'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806326&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;SHOX2&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807446&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;UBE2B&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807842&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;ZNF205&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804689&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;NR2F1&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804826&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;OTUD3&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_805589&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;PRSS41&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_802541&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;G6PC3&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801000&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;CACNB1&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806489&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;SLC2A4&#92;&quot;}]&quot;' data-total-rows='11' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;standard_key&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "d2c174f6abfd45419f6a7f7e1cdb31b3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"profiles-with-metadata\">Profiles with metadata</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "4a49fad3596646c67c9788a59f36874c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='nWHF-0' random-id='4d046bea-4b61-4f42-545f-60d259cb0d15'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;A02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.22341684997081757,&#92;&quot;X_2&#92;&quot;:-0.04948697239160538,&#92;&quot;X_3&#92;&quot;:-0.8262311220169067,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;L23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.07934878021478653,&#92;&quot;X_2&#92;&quot;:-0.016957962885499,&#92;&quot;X_3&#92;&quot;:-0.2775576412677765,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;I23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.023831641301512718,&#92;&quot;X_2&#92;&quot;:-0.005369932856410742,&#92;&quot;X_3&#92;&quot;:-0.2983204424381256,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;J02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.16949144005775452,&#92;&quot;X_2&#92;&quot;:-0.023421943187713623,&#92;&quot;X_3&#92;&quot;:-0.08818655461072922,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;O23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.2951115071773529,&#92;&quot;X_2&#92;&quot;:-0.1242409273982048,&#92;&quot;X_3&#92;&quot;:1.0551925897598267,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;M02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.15537410974502563,&#92;&quot;X_2&#92;&quot;:-0.026325903832912445,&#92;&quot;X_3&#92;&quot;:0.591514527797699,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;C23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.25666025280952454,&#92;&quot;X_2&#92;&quot;:-0.1749030202627182,&#92;&quot;X_3&#92;&quot;:0.6468533873558044,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;D02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.07492467761039734,&#92;&quot;X_2&#92;&quot;:0.012943788431584835,&#92;&quot;X_3&#92;&quot;:0.6994839906692505,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;G02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.15859965980052948,&#92;&quot;X_2&#92;&quot;:-0.037803176790475845,&#92;&quot;X_3&#92;&quot;:0.6320673823356628,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;F23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.14520801603794098,&#92;&quot;X_2&#92;&quot;:0.0985570028424263,&#92;&quot;X_3&#92;&quot;:-0.5413515567779541,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;}]&quot;' data-total-rows='2811' data-total-columns='9' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;Metadata_Source&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_Plate&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_Well&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;X_1&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;X_2&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;X_3&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;pert_type&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;name&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

@@ -1,5 +1,8 @@
 # marimo
 __marimo__/
+!notebooks/__marimo__/
+!notebooks/__marimo__/session/
+!notebooks/__marimo__/session/*.json
 
 # Python
 __pycache__/

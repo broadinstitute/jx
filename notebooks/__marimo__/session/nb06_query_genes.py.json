@@ -1,0 +1,100 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.1",
+    "script_metadata_hash": "3015e5991ef190c54899dd801e725583"
+  },
+  "cells": [
+    {
+      "id": "setup",
+      "code_hash": "5b00ad690bfb09eb960c70ca77a50111",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "ca7c4fffc23d503ec5a2600de76e5538",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "14e7ab024c10d1d4f21a3314881ccd1d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "91d51ab47b068a32e78d20d3ec06ff62",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "3107eecf9442d7b971b38b224a44ebb2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"query-genes-externally\">Query genes externally</h1>\n<span class=\"paragraph\">Link JUMP gene perturbations to the\n<a href=\"https://www.ncbi.nlm.nih.gov/books/NBK25501/\" rel=\"noopener noreferrer\" target=\"_blank\">NCBI Entrez</a> database for\ngene summaries, descriptions, and synonyms using\n<a href=\"https://biopython.org/\" rel=\"noopener noreferrer\" target=\"_blank\">Biopython</a>.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "78c7ed3232058b39b640d73af926f7ad",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='lEQa-0' random-id='b63a6ef0-d460-4cf0-e26a-b983fc40fa66'><marimo-text data-initial-value='&quot;CHRM4, SCAPER, GPR176, LY6K&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Gene symbols (comma-separated)&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;&quot;' data-kind='&quot;text&quot;' data-full-width='false' data-disabled='false' data-debounce='true'></marimo-text></marimo-ui-element><marimo-ui-element object-id='lEQa-1' random-id='bb5b4fde-0a04-8da0-6f73-b69702948e06'><marimo-text data-initial-value='&quot;example@email.com&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Email for NCBI (required by Entrez)&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;&quot;' data-kind='&quot;text&quot;' data-full-width='false' data-disabled='false' data-debounce='true'></marimo-text></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "9446d28d7068bf61e7122f29f6af1baf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='PKri-0' random-id='1732625a-53eb-21e7-425f-ff5c289495a0'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;Name&#92;&quot;:&#92;&quot;GPR176&#92;&quot;,&#92;&quot;Description&#92;&quot;:&#92;&quot;G protein-coupled receptor 176&#92;&quot;,&#92;&quot;Summary&#92;&quot;:&#92;&quot;Members of the G protein-coupled receptor family, such as GPR176, are cell surface receptors involved in responses to hormones, growth factors, and neurotransmitters (Hata et al., 1995 [PubMed 7893747]).[supplied by OMIM, Jul 2008]&#92;&quot;,&#92;&quot;OtherDesignations&#92;&quot;:&#92;&quot;G-protein coupled receptor 176|probable G-protein coupled receptor 176&#92;&quot;},{&#92;&quot;Name&#92;&quot;:&#92;&quot;CHRM4&#92;&quot;,&#92;&quot;Description&#92;&quot;:&#92;&quot;cholinergic receptor muscarinic 4&#92;&quot;,&#92;&quot;Summary&#92;&quot;:&#92;&quot;The muscarinic cholinergic receptors belong to a larger family of G protein-coupled receptors. The functional diversity of these receptors is defined by the binding of acetylcholine and includes cellular responses such as adenylate cyclase inhibition, phosphoinositide degeneration, and potassium channel mediation. Muscarinic receptors influence many effects of acetylcholine in the central and peripheral nervous system. The clinical implications of this receptor are unknown; however, mouse studies link its function to adenylyl cyclase inhibition. [provided by RefSeq, Jul 2008]&#92;&quot;,&#92;&quot;OtherDesignations&#92;&quot;:&#92;&quot;muscarinic acetylcholine receptor M4|acetylcholine receptor, muscarinic 4&#92;&quot;},{&#92;&quot;Name&#92;&quot;:&#92;&quot;LY6K&#92;&quot;,&#92;&quot;Description&#92;&quot;:&#92;&quot;lymphocyte antigen 6 family member K&#92;&quot;,&#92;&quot;Summary&#92;&quot;:&#92;&quot;Predicted to be involved in binding activity of sperm to zona pellucida. Predicted to act upstream of or within flagellated sperm motility. Predicted to be located in cell surface and plasma membrane. Predicted to be active in acrosomal vesicle. [provided by Alliance of Genome Resources, Jul 2025]&#92;&quot;,&#92;&quot;OtherDesignations&#92;&quot;:&#92;&quot;lymphocyte antigen 6K|cancer/testis antigen 97|lymphocyte antigen 6 complex, locus K|up-regulated in lung cancer 10&#92;&quot;},{&#92;&quot;Name&#92;&quot;:&#92;&quot;SCAPER&#92;&quot;,&#92;&quot;Description&#92;&quot;:&#92;&quot;S-phase cyclin A associated protein in the ER&#92;&quot;,&#92;&quot;Summary&#92;&quot;:&#92;&quot;Predicted to enable nucleic acid binding activity and zinc ion binding activity. Acts upstream of or within retina development in camera-type eye. Located in cytosol and nuclear speck. [provided by Alliance of Genome Resources, Jul 2025]&#92;&quot;,&#92;&quot;OtherDesignations&#92;&quot;:&#92;&quot;S phase cyclin A-associated protein in the endoplasmic reticulum|zinc finger protein 291&#92;&quot;}]&quot;' data-total-rows='4' data-total-columns='4' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='10' data-field-types='[[&quot;Name&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Description&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Summary&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;OtherDesignations&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}
