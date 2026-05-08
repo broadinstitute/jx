@@ -40,6 +40,26 @@ Instances of the pattern, each targeting a different scientific dataset:
 
 All instances are skill-light marimo catalogs.
 
+## Computational screens
+
+Once a catalog is mature, screens become possible. The vignettes define what you can sweep over - genes, compounds, cell lines, conditions - and the agent composes one analysis per point in that space. Each composed notebook is a re-runnable artifact, independent of the agent run that produced it. The ranked output gets triaged the way a Cell Painting or a CRISPR screen does: most hits are noise, a few hold up under follow-up.
+
+Whole-genome screens taught us how to fan out across a perturbation set, score, rank, validate, and cull. Same shape here - the unit being screened is a hypothesis rather than a guide RNA or a compound.
+
+Three subproblems:
+
+- **What can be swept.** The vignettes determine this. A catalog with notebooks for compound activity, gene-gene morphological similarity, and chemical-genetic interaction defines a different sweepable space than a catalog of summary-statistics notebooks. Designing the catalog is designing the search space.
+
+- **What counts as a hit.** Standard screen output: ranked lists, hit rates, complementary sweeps to break ties, downstream validation for the few survivors. A reviewer agent in the loop catches obvious slop. Which surviving hit is *interesting* still needs a scientist.
+
+- **What it costs.** Reusing hoisted functions and a live kernel is cheaper per point than ad-hoc agent generation. A screen-grade evaluation reports tokens and time per analysis alongside hit rate.
+
+A project's open questions are the place to start - the issues, follow-up lists, and "we never got to..." notes that accumulate around any flagship dataset. Most of this is already written down somewhere. The screen is just executing it.
+
+Once several instances exist alongside each other, a sweep can run across them. Each catalog (jx, fgx, prx, dmx) covers a different hypothesis space, and pulling from more than one lets you ask questions no single dataset can answer alone.
+
+*The framing in this section draws on conversations with Blake Lash (CRISPR-screen analogy, fan-out and triage), Yasha Ektefaie (running JUMP as a live screen), Anne Carpenter (real discovery and prioritization, not verification), and Eric Lander (triage at thousand-notebook scale) - personal communication, 2026.*
+
 ## The paper
 
 A paper introducing the pattern, with the instances as evidence and formal evaluation across them.
@@ -91,7 +111,7 @@ The manuscript itself; Figures 1 and 2; Tables 1 and 2; dmx scaffold so it can b
 - Promotion criteria. When does a composed notebook earn its way back into the vignette catalog? Currently judged case-by-case.
 - External adoption. The pattern's value depends on domain experts other than the original author being able to ship a vignette catalog for their dataset. Time-to-second-instance is the metric.
 - Catalog evolution. What does federated-learning-style improvement look like in practice — distribute catalog v1, observe what users compose against it, aggregate signals (reuse rates, missing vignettes, hoist-worthy one-off helpers) into a curated v2?
-- Computational screens. Once a catalog is mature, the agent can sweep a space of hypotheses, composing one analysis per point and ranking the results — analogous to a whole-genome screen at the level of concepts rather than genes. Two subproblems: what defines the enumerable search space (the catalog's parameterization vocabulary determines what's sweepable), and what makes a hit a "good discovery."
+- Screen volume vs. inspectability. The promise that every hit and every miss is a re-runnable notebook is what distinguishes this from a black-box generation pipeline. Whether that holds at thousand-analysis scale, or whether triage itself becomes the bottleneck, is unresolved.
 
 ## Authors
 
