@@ -1,0 +1,9 @@
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint.per-file-ignores]
+# Marimo notebooks intentionally use bare expressions for rendering, imports
+# from setup/cross-notebook helpers that ruff cannot always see statically, and
+# cell-private scratch values. Keep this centralized instead of scattering
+# fragile per-line noqa comments through notebooks.
+"notebooks/nb*.py" = ["B018", "F401", "F821", "F841"]

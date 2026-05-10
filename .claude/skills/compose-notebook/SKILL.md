@@ -308,7 +308,8 @@ These have bitten real composition work. Know them before you debug.
   `.update()` throws ValueError.
 - **Bare widget expressions trigger ruff B018.** Marimo renders the
   last expression in a cell, so `dataset_dropdown` on a bare line is
-  intentional. Add `# noqa: B018` to suppress the lint warning.
+  intentional. Keep the notebook-level ignore in `pyproject.toml` rather
+  than scattering per-line `# noqa: B018` comments.
 - **`create_cell` produces empty names.** Cells created via
   `ctx.create_cell()` get `name=""` instead of `"_"`. Fix names before
   saving with `generate_filecontents`, or codegen will produce
@@ -480,8 +481,11 @@ when the notebook is opened in the browser.
 resolve statically (F821 "undefined name"). Suppress with:
 
 ```toml
+[tool.ruff]
+line-length = 120
+
 [tool.ruff.lint.per-file-ignores]
-"notebooks/nb*.py" = ["F821", "F841"]
+"notebooks/nb*.py" = ["B018", "F401", "F821", "F841"]
 ```
 
 ## When *not* to use this skill

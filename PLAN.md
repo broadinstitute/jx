@@ -40,6 +40,49 @@ Instances of the pattern, each targeting a different scientific dataset:
 
 All four built instances are skill-light marimo catalogs.
 
+## Shared repository contract
+
+The instances should look the same by default. A reader or agent opening any
+of `jx`, `fgx`, `prx`, or `dmx` should find the same public contract:
+
+- `README.md` is the human entry point: what the catalog is for, the notebook
+  list, how to get started, license, and links to sibling catalogs.
+- `AGENTS.md` is the agent entry point: validation rules, settled
+  architecture, repo-specific gotchas, and when to use the catalog. Tool-
+  specific files such as `CLAUDE.md` should point to it rather than fork the
+  guidance.
+- `.claude/skills/getting-started/SKILL.md` launches the first notebook in a
+  marimo sandbox and installs the upstream marimo skills for the user's agent
+  of choice.
+- `.claude/skills/compose-notebook/SKILL.md` is the detailed composition
+  contract: the catalog table, reusable helpers, import recipe, dependency
+  rules, validation steps, and promotion rules for new helpers.
+- `notebooks/nbNN_<topic>.py` are the catalog vignettes. They use PEP 723
+  inline dependencies, `with app.setup`, and top-level `@app.function`
+  helpers so later notebooks can import them as plain Python modules.
+- `notebooks/__marimo__/session/*.json` should be committed when notebooks can
+  be exported reliably, so molab previews render outputs without re-running.
+- `pyproject.toml` should carry shared tool configuration, especially ruff
+  per-file ignores needed by marimo notebooks and cross-notebook imports.
+
+The validation bar is also common: after editing a notebook, run it in a
+marimo sandbox, inspect the actual outputs, export or refresh the molab session
+snapshot when appropriate, and run static checks (`ruff` plus `marimo check`).
+Static checks alone are not sufficient for scientific notebooks; they do not
+catch empty tables, stale endpoint assumptions, wrong sign conventions, or
+plots that render but say nothing.
+
+Intentional differences should be explicit and dataset-driven:
+
+| Repo | Data surface | Auth | Cache / data policy | Extra surface |
+|---|---|---|---|---|
+| `jx` | DuckDB metadata, parquet profiles, S3 images, Zenodo similarity matrices | Public data, no repo secret required | Cache large remote artifacts under `~/.cache/jx` or equivalent | `PLAN.md`, `CITATION.cff`, release workflows, and `queries/` ggsql catalog |
+| `fgx` | FinnGenie `/api/v1/*` REST endpoints via `httpx` | `FINNGENIE_TOKEN` in local `.env`; same key works for REST and MCP | Live API reads; no committed cache | molab snapshots for every notebook |
+| `prx` | Bond et al. 2025 Figshare/Dryad downloads via `pooch` | Public data, no repo secret required | Raw downloads under ignored `data/`; pin SHA-256 on every fetched artifact | Heavier scientific deps (`rdkit`, `scikit-learn`) |
+| `dmx` | Public DepMap Breadbox REST API via `requests` | Public read-only examples need no API key | Live API reads; summarize large responses before display | Minimal new-instance scaffold |
+
+Everything else should converge unless there is a concrete reason not to.
+
 ## Computational screens
 
 Once a catalog is mature, screens become possible. The vignettes define what you can sweep over - genes, compounds, cell lines, conditions - and the agent composes one analysis per point in that space. Each composed notebook is a re-runnable artifact, independent of the agent run that produced it. The ranked output gets triaged the way a Cell Painting or a CRISPR screen does: most hits are noise, a few hold up under follow-up.

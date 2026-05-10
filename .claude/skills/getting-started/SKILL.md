@@ -31,11 +31,12 @@ terminal. Re-check `uv --version`.
 
 marimo-pair is a self-contained skill (SKILL.md + bundled `scripts/`)
 distributed via [skills.sh](https://skills.sh). Install it globally for
-the user:
+the user's current agent (`codex` or `claude-code`):
 
-    npx skills add marimo-team/marimo-pair -g --agent claude-code -y
+    AGENT=codex  # or: claude-code
+    npx skills add marimo-team/marimo-pair -g --agent "$AGENT" -y
 
-After install, the user should restart their Claude Code session so the
+After install, the user may need to restart their agent session so the
 skill loads. On the next session, marimo-pair's tools (e.g. running
 `scripts/execute-code.sh`) are available via its `allowed-tools`
 frontmatter. If you don't see the skill, it isn't loaded yet.
