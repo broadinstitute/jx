@@ -353,6 +353,17 @@ These have bitten real composition work. Know them before you debug.
   for a free port programmatically (`python -c "import socket; s =
   socket.socket(); s.bind(('127.0.0.1', 0)); print(s.getsockname()[1])"`)
   or pick something in the 27xx–28xx range after checking `ss -ltn`.
+- **Session snapshots are matched by `code_hash`, not by position.** Each
+  cell in `notebooks/__marimo__/session/*.json` carries the hash of the cell
+  source it was generated from. molab attaches the stored output to a
+  source cell only if the hashes match; otherwise the cell renders with
+  no output (and the bug looks like "molab is dropping my table"). Any
+  later edit to the `.py` - including a whitespace-only `ruff format`
+  pass - changes the hash. **Always regenerate session snapshots after
+  the final source edit / formatter pass in a task, and commit the
+  refreshed `.json` files in the same change that touched the `.py`
+  files.** If a molab preview looks emptier than the live editor, the
+  first thing to check is whether the snapshot is stale.
 
 ## Process for a new composition
 

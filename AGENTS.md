@@ -24,19 +24,28 @@ PORT=$(python -c "import socket; s=socket.socket(); s.bind(('127.0.0.1',0)); pri
 env -u PYTHONPATH uvx marimo edit --sandbox --headless --no-token --port $PORT notebooks/nbNN_*.py
 ```
 
-For notebooks that can export reliably, refresh the molab session snapshot:
+Then run static checks:
+
+```bash
+uvx ruff check notebooks/
+uvx ruff format notebooks/
+uvx marimo check notebooks/*.py
+```
+
+**Then, last, refresh the molab session snapshot** for any notebook whose source
+changed in this task:
 
 ```bash
 env -u PYTHONPATH uvx marimo export session --sandbox notebooks/nbNN_*.py
 ```
 
-Then run static checks:
-
-```bash
-uvx ruff format --check notebooks/
-uvx ruff check notebooks/
-uvx marimo check notebooks/*.py
-```
+Order matters. Session snapshots store a `code_hash` per cell, and molab
+attaches the stored output only when the snapshot hash matches the source
+cell. Any later edit to the notebook source - including a `ruff format`
+whitespace pass - shifts every `code_hash` and silently strips outputs in
+the public molab preview. Always regenerate snapshots **after** the final
+formatter / source edit, and commit the regenerated `.json` files in the
+same change that touched the `.py` files.
 
 ## Architecture
 
