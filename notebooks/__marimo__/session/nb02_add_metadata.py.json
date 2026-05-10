@@ -7,7 +7,7 @@
   "cells": [
     {
       "id": "setup",
-      "code_hash": "37e7085116d1834d46bc365d9ad65332",
+      "code_hash": "f5190251c559f03036ab81d3d980261c",
       "outputs": [
         {
           "type": "data",
@@ -16,14 +16,7 @@
           }
         }
       ],
-      "console": [
-        {
-          "type": "stream",
-          "name": "stderr",
-          "text": "Downloading data from 'https://zenodo.org/records/12211976/files/babel.db' to file '/Users/shsingh/Library/Caches/pooch/2eaa6a2f4915f72d7100683f53982ed8-babel.db'.\n",
-          "mimetype": "text/plain"
-        }
-      ]
+      "console": []
     },
     {
       "id": "Hbol",
@@ -40,7 +33,7 @@
     },
     {
       "id": "MJUe",
-      "code_hash": "4224cc32757b1cbfe5b7d60879714136",
+      "code_hash": "2b709526bffdb92657f00ec0745fa6ce",
       "outputs": [
         {
           "type": "data",
@@ -66,7 +59,7 @@
     },
     {
       "id": "bkHC",
-      "code_hash": "d5d04b6783811871336124c2c88f663f",
+      "code_hash": "15232028baf34a33191836a067041523",
       "outputs": [
         {
           "type": "data",
@@ -79,7 +72,7 @@
     },
     {
       "id": "lEQa",
-      "code_hash": "e4964bcf1b11a901735df4cf542181e0",
+      "code_hash": "02eb07abfd59e43d1867959423126cb6",
       "outputs": [
         {
           "type": "data",
@@ -92,12 +85,12 @@
     },
     {
       "id": "PKri",
-      "code_hash": "c316d3b6abfa4532dfc76cb4de62a23c",
+      "code_hash": "f4c6d4e05bfd42e43608f151562ef85c",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-0' random-id='8c7ad6c9-ac69-cda0-d6b1-ebdee917ad0c'><marimo-dropdown data-initial-value='[&quot;crispr&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Dataset&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;crispr&quot;,&quot;orf&quot;,&quot;compound&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element><marimo-ui-element object-id='PKri-1' random-id='e77a5195-6140-d806-6962-248a925e76c7'><marimo-slider data-initial-value='10' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Number of samples&lt;/span&gt;&lt;/span&gt;&quot;' data-start='5' data-stop='50' data-step='5' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div>"
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-0' random-id='ec78fc18-ea02-afeb-f0f4-75aa1056ef83'><marimo-dropdown data-initial-value='[&quot;crispr&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Dataset&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;crispr&quot;,&quot;orf&quot;,&quot;compound&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element><marimo-ui-element object-id='PKri-1' random-id='96cd6096-e622-0788-5dbe-ffbe777324f2'><marimo-slider data-initial-value='10' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Number of samples&lt;/span&gt;&lt;/span&gt;&quot;' data-start='5' data-stop='50' data-step='5' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div>"
           }
         }
       ],
@@ -131,7 +124,7 @@
     },
     {
       "id": "BYtC",
-      "code_hash": "34ff461abb5e9b0bba697b3e94c33b52",
+      "code_hash": "33e72ca3dd233fcc7257e70df55f34fb",
       "outputs": [
         {
           "type": "data",
@@ -144,12 +137,12 @@
     },
     {
       "id": "RGSE",
-      "code_hash": "bb91432b694a184a884ea0df2d3572a9",
+      "code_hash": "0698a1e6f3db9eeda67fee0c90fd9a5e",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/html": "<marimo-ui-element object-id='RGSE-0' random-id='81f2e281-bbd9-fb44-7bb6-b16f88698f37'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806326&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806489&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_805589&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804826&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804689&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801000&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801657&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_802541&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807446&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;}]&quot;' data-total-rows='11' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;pert_type&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+            "text/html": "<marimo-ui-element object-id='RGSE-0' random-id='b61c68f2-4ab5-b29f-a194-9c070c3816df'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806326&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806489&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_805589&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804826&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804689&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801000&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801657&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_802541&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807446&#92;&quot;,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;trt&#92;&quot;}]&quot;' data-total-rows='11' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;pert_type&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
           }
         }
       ],
@@ -157,7 +150,7 @@
     },
     {
       "id": "Kclp",
-      "code_hash": "cd9a221164ce813984c19d1423133bae",
+      "code_hash": "891def08a4c2060bf68bf6cee990e69a",
       "outputs": [
         {
           "type": "data",
@@ -170,12 +163,12 @@
     },
     {
       "id": "emfo",
-      "code_hash": "5bdf7f394776eded4a760a5fc6e35f59",
+      "code_hash": "7762b0193ed1236a57408e0572a3d05e",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/html": "<marimo-ui-element object-id='emfo-0' random-id='e902a225-333e-0158-39cf-8ef07434bf83'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806326&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;SHOX2&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807446&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;UBE2B&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807842&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;ZNF205&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804689&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;NR2F1&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804826&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;OTUD3&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_805589&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;PRSS41&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_802541&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;G6PC3&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801000&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;CACNB1&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806489&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;SLC2A4&#92;&quot;}]&quot;' data-total-rows='11' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;standard_key&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+            "text/html": "<marimo-ui-element object-id='emfo-0' random-id='6525ec44-e788-b50e-942e-76c405cd82cc'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806326&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;SHOX2&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807446&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;UBE2B&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_807842&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;ZNF205&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804689&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;NR2F1&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_804826&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;OTUD3&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_805589&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;PRSS41&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_802541&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;G6PC3&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_801000&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;CACNB1&#92;&quot;},{&#92;&quot;JCP2022&#92;&quot;:&#92;&quot;JCP2022_806489&#92;&quot;,&#92;&quot;standard_key&#92;&quot;:&#92;&quot;SLC2A4&#92;&quot;}]&quot;' data-total-rows='11' data-total-columns='2' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;standard_key&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
           }
         }
       ],
@@ -183,7 +176,7 @@
     },
     {
       "id": "Hstk",
-      "code_hash": "d2c174f6abfd45419f6a7f7e1cdb31b3",
+      "code_hash": "5134da66bf2f9db0a0977644fa8dcbcb",
       "outputs": [
         {
           "type": "data",
@@ -196,12 +189,12 @@
     },
     {
       "id": "nWHF",
-      "code_hash": "4a49fad3596646c67c9788a59f36874c",
+      "code_hash": "817b273e66cdb964dba09f3fd83ce9a6",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/html": "<marimo-ui-element object-id='nWHF-0' random-id='5f36461c-ffa5-56e3-eb42-d3471ba6f803'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;A02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.22341684997081757,&#92;&quot;X_2&#92;&quot;:-0.04948697239160538,&#92;&quot;X_3&#92;&quot;:-0.8262311220169067,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;L23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.07934878021478653,&#92;&quot;X_2&#92;&quot;:-0.016957962885499,&#92;&quot;X_3&#92;&quot;:-0.2775576412677765,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;I23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.023831641301512718,&#92;&quot;X_2&#92;&quot;:-0.005369932856410742,&#92;&quot;X_3&#92;&quot;:-0.2983204424381256,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;J02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.16949144005775452,&#92;&quot;X_2&#92;&quot;:-0.023421943187713623,&#92;&quot;X_3&#92;&quot;:-0.08818655461072922,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;O23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.2951115071773529,&#92;&quot;X_2&#92;&quot;:-0.1242409273982048,&#92;&quot;X_3&#92;&quot;:1.0551925897598267,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;M02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.15537410974502563,&#92;&quot;X_2&#92;&quot;:-0.026325903832912445,&#92;&quot;X_3&#92;&quot;:0.591514527797699,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;C23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.25666025280952454,&#92;&quot;X_2&#92;&quot;:-0.1749030202627182,&#92;&quot;X_3&#92;&quot;:0.6468533873558044,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;D02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.07492467761039734,&#92;&quot;X_2&#92;&quot;:0.012943788431584835,&#92;&quot;X_3&#92;&quot;:0.6994839906692505,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;G02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.15859965980052948,&#92;&quot;X_2&#92;&quot;:-0.037803176790475845,&#92;&quot;X_3&#92;&quot;:0.6320673823356628,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;F23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.14520801603794098,&#92;&quot;X_2&#92;&quot;:0.0985570028424263,&#92;&quot;X_3&#92;&quot;:-0.5413515567779541,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;}]&quot;' data-total-rows='2811' data-total-columns='9' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;Metadata_Source&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_Plate&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_Well&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;X_1&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;X_2&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;X_3&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;pert_type&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;name&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+            "text/html": "<marimo-ui-element object-id='nWHF-0' random-id='5f5305b0-206b-ca7e-6392-dfac166147c3'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;A02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.22341684997081757,&#92;&quot;X_2&#92;&quot;:-0.04948697239160538,&#92;&quot;X_3&#92;&quot;:-0.8262311220169067,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;L23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.07934878021478653,&#92;&quot;X_2&#92;&quot;:-0.016957962885499,&#92;&quot;X_3&#92;&quot;:-0.2775576412677765,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;I23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.023831641301512718,&#92;&quot;X_2&#92;&quot;:-0.005369932856410742,&#92;&quot;X_3&#92;&quot;:-0.2983204424381256,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;J02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.16949144005775452,&#92;&quot;X_2&#92;&quot;:-0.023421943187713623,&#92;&quot;X_3&#92;&quot;:-0.08818655461072922,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;O23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.2951115071773529,&#92;&quot;X_2&#92;&quot;:-0.1242409273982048,&#92;&quot;X_3&#92;&quot;:1.0551925897598267,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;M02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.15537410974502563,&#92;&quot;X_2&#92;&quot;:-0.026325903832912445,&#92;&quot;X_3&#92;&quot;:0.591514527797699,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;C23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.25666025280952454,&#92;&quot;X_2&#92;&quot;:-0.1749030202627182,&#92;&quot;X_3&#92;&quot;:0.6468533873558044,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;D02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.07492467761039734,&#92;&quot;X_2&#92;&quot;:0.012943788431584835,&#92;&quot;X_3&#92;&quot;:0.6994839906692505,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;G02&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.15859965980052948,&#92;&quot;X_2&#92;&quot;:-0.037803176790475845,&#92;&quot;X_3&#92;&quot;:0.6320673823356628,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;},{&#92;&quot;Metadata_Source&#92;&quot;:&#92;&quot;source_13&#92;&quot;,&#92;&quot;Metadata_Plate&#92;&quot;:&#92;&quot;CP-CC9-R1-01&#92;&quot;,&#92;&quot;Metadata_Well&#92;&quot;:&#92;&quot;F23&#92;&quot;,&#92;&quot;Metadata_JCP2022&#92;&quot;:&#92;&quot;JCP2022_800002&#92;&quot;,&#92;&quot;X_1&#92;&quot;:-0.14520801603794098,&#92;&quot;X_2&#92;&quot;:0.0985570028424263,&#92;&quot;X_3&#92;&quot;:-0.5413515567779541,&#92;&quot;pert_type&#92;&quot;:&#92;&quot;negcon&#92;&quot;,&#92;&quot;name&#92;&quot;:&#92;&quot;non-targeting&#92;&quot;}]&quot;' data-total-rows='2811' data-total-columns='9' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='true' data-page-size='10' data-field-types='[[&quot;Metadata_Source&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_Plate&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_Well&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;Metadata_JCP2022&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;X_1&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;X_2&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;X_3&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;pert_type&quot;,[&quot;string&quot;,&quot;str&quot;]],[&quot;name&quot;,[&quot;string&quot;,&quot;str&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='true' data-show-data-types='true' data-show-page-size-selector='true' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
           }
         }
       ],

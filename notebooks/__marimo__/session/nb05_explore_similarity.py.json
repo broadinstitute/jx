@@ -20,7 +20,7 @@
     },
     {
       "id": "Hbol",
-      "code_hash": "e170571a549e4be094aa3dfd3e57469a",
+      "code_hash": "12edae4182765d1259507decf2913731",
       "outputs": [
         {
           "type": "data",
@@ -33,7 +33,7 @@
     },
     {
       "id": "MJUe",
-      "code_hash": "3ae0ee1b3f3bce3f24689335b465d716",
+      "code_hash": "dc5c3e26702b245e3257a5da579e0afc",
       "outputs": [
         {
           "type": "data",
@@ -46,7 +46,7 @@
     },
     {
       "id": "vblA",
-      "code_hash": "d3944d11127d2574817d9a30506f8a00",
+      "code_hash": "943027a33b405006ccb27fe25e4ca3e9",
       "outputs": [
         {
           "type": "data",
@@ -85,12 +85,12 @@
     },
     {
       "id": "PKri",
-      "code_hash": "3d2ffc248573f19c1a6960dbd1f0ba48",
+      "code_hash": "fdf4afe15ae261265aeec9969d0bf1e7",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-0' random-id='1abe3793-5207-99ed-a068-2100cfee465a'><marimo-dropdown data-initial-value='[&quot;crispr&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Dataset&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;crispr&quot;,&quot;orf&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element><marimo-ui-element object-id='PKri-1' random-id='37f274fc-8f72-b70f-66c9-c6f5124690a5'><marimo-slider data-initial-value='3' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Number of perturbations to sample&lt;/span&gt;&lt;/span&gt;&quot;' data-start='3' data-stop='20' data-step='1' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element><marimo-ui-element object-id='PKri-2' random-id='024e39e8-3806-53b7-9739-11f5fa2cc1d9'><marimo-number data-initial-value='42' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Random seed&lt;/span&gt;&lt;/span&gt;&quot;' data-debounce='false' data-full-width='false' data-disabled='false'></marimo-number></marimo-ui-element></div>"
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-0' random-id='2dd11b50-c64b-5508-f02a-5f40c3cf878f'><marimo-dropdown data-initial-value='[&quot;crispr&quot;]' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Dataset&lt;/span&gt;&lt;/span&gt;&quot;' data-options='[&quot;crispr&quot;,&quot;orf&quot;]' data-allow-select-none='false' data-searchable='false' data-full-width='false'></marimo-dropdown></marimo-ui-element><marimo-ui-element object-id='PKri-1' random-id='a0f93ee5-30a6-cdfb-9410-85c5ed161120'><marimo-slider data-initial-value='3' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Number of perturbations to sample&lt;/span&gt;&lt;/span&gt;&quot;' data-start='3' data-stop='20' data-step='1' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element><marimo-ui-element object-id='PKri-2' random-id='2c841c0a-587d-d753-e4ea-ae11aade6322'><marimo-number data-initial-value='42' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Random seed&lt;/span&gt;&lt;/span&gt;&quot;' data-debounce='false' data-full-width='false' data-disabled='false'></marimo-number></marimo-ui-element></div>"
           }
         }
       ],
@@ -129,7 +129,7 @@
         {
           "type": "data",
           "data": {
-            "text/html": "<marimo-ui-element object-id='BYtC-0' random-id='101c7de4-2fe6-46f9-d274-52d1b9b0c48c'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022_805125&#92;&quot;:0.9999999403953552,&#92;&quot;JCP2022_802572&#92;&quot;:0.015720458701252937,&#92;&quot;JCP2022_801315&#92;&quot;:0.06601156294345856},{&#92;&quot;JCP2022_805125&#92;&quot;:0.015720458701252937,&#92;&quot;JCP2022_802572&#92;&quot;:1.0000001192092896,&#92;&quot;JCP2022_801315&#92;&quot;:0.12222043424844742},{&#92;&quot;JCP2022_805125&#92;&quot;:0.06601156294345856,&#92;&quot;JCP2022_802572&#92;&quot;:0.12222043424844742,&#92;&quot;JCP2022_801315&#92;&quot;:0.9999997019767761}]&quot;' data-total-rows='3' data-total-columns='3' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='10' data-field-types='[[&quot;JCP2022_805125&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;JCP2022_802572&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;JCP2022_801315&quot;,[&quot;number&quot;,&quot;f32&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
+            "text/html": "<marimo-ui-element object-id='BYtC-0' random-id='cc5c6d99-3048-ee68-e7ef-38b09c1d3a48'><marimo-table data-initial-value='[]' data-label='null' data-data='&quot;[{&#92;&quot;JCP2022_805125&#92;&quot;:0.9999999403953552,&#92;&quot;JCP2022_802572&#92;&quot;:0.015720458701252937,&#92;&quot;JCP2022_801315&#92;&quot;:0.06601156294345856},{&#92;&quot;JCP2022_805125&#92;&quot;:0.015720458701252937,&#92;&quot;JCP2022_802572&#92;&quot;:1.0000001192092896,&#92;&quot;JCP2022_801315&#92;&quot;:0.12222043424844742},{&#92;&quot;JCP2022_805125&#92;&quot;:0.06601156294345856,&#92;&quot;JCP2022_802572&#92;&quot;:0.12222043424844742,&#92;&quot;JCP2022_801315&#92;&quot;:0.9999997019767761}]&quot;' data-total-rows='3' data-total-columns='3' data-max-columns='50' data-banner-text='&quot;&quot;' data-pagination='false' data-page-size='10' data-field-types='[[&quot;JCP2022_805125&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;JCP2022_802572&quot;,[&quot;number&quot;,&quot;f32&quot;]],[&quot;JCP2022_801315&quot;,[&quot;number&quot;,&quot;f32&quot;]]]' data-show-filters='true' data-show-download='true' data-show-column-summaries='false' data-show-data-types='true' data-show-page-size-selector='false' data-show-column-explorer='true' data-show-chart-builder='true' data-row-headers='[]' data-has-stable-row-id='false' data-lazy='false' data-preload='false'></marimo-table></marimo-ui-element>"
           }
         }
       ],
