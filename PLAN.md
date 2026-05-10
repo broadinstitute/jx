@@ -33,12 +33,12 @@ What makes this tractable is that a coding-agent environment (e.g., Claude Code)
 
 Instances of the pattern, each targeting a different scientific dataset:
 
-- **[jx](https://github.com/broadinstitute/jx)** — JUMP Cell Painting (imaging). Six vignettes plus a composition demo; DuckDB metadata, parquet profiles, S3 image fetches; polars + duckdb + broad-babel + jump-portrait. The most developed instance; ships with `CITATION.cff` and a Zenodo concept DOI ([`10.5281/zenodo.19598884`](https://doi.org/10.5281/zenodo.19598884)).
-- **[fgx](https://github.com/broadinstitute/fgx)** — FinnGen (genetics, GWAS). Seven vignettes against FinnGenie's `/api/v1/*` REST surface via `httpx.get`; polars + altair. Each notebook ships a committed molab session snapshot so previews render without re-executing.
-- **[prx](https://github.com/broadinstitute/prx)** — PROSPECT (chemical-genetics). Six vignettes pulling Bond et al. 2025 data from Figshare via pooch; sGR GCT matrices, PCL clusters, MOA inference; polars + rdkit + scikit-learn.
-- **[dmx](https://github.com/broadinstitute/dmx)** — DepMap (cancer dependencies). Initial five-notebook scaffold against the public Breadbox REST API; read-only examples require no API key; orientation, dataset discovery, gene dependency profiles, context comparisons, and association queries; requests + polars + altair.
+- **[jx](https://github.com/broadinstitute/jx)** — JUMP Cell Painting (imaging). Profile retrieval, metadata annotation, mAP activity, Cell Painting image display, similarity search, and gene annotation, plus a composition demo; DuckDB metadata, parquet profiles, S3 image fetches; polars + duckdb + broad-babel + jump-portrait. The most developed instance; ships with `CITATION.cff` and a Zenodo concept DOI ([`10.5281/zenodo.19598884`](https://doi.org/10.5281/zenodo.19598884)).
+- **[fgx](https://github.com/broadinstitute/fgx)** — FinnGen (genetics, GWAS). Vignettes against FinnGenie's `/api/v1/*` REST surface via `httpx.get`; polars + altair. The same bearer token works for both the REST API and the FinnGenie MCP server.
+- **[prx](https://github.com/broadinstitute/prx)** — PROSPECT (chemical-genetics). Vignettes pulling Bond et al. 2025 data from Figshare via pooch; sGR GCT matrices, PCL clusters, MOA inference; polars + rdkit + scikit-learn.
+- **[dmx](https://github.com/broadinstitute/dmx)** — DepMap (cancer dependencies). Vignettes against the public Breadbox REST API; read-only examples require no API key; requests + polars + altair.
 
-All four built instances are skill-light marimo catalogs.
+All four instances are skill-light marimo catalogs that share the contract below.
 
 ## Shared repository contract
 
@@ -60,10 +60,14 @@ of `jx`, `fgx`, `prx`, or `dmx` should find the same public contract:
 - `notebooks/nbNN_<topic>.py` are the catalog vignettes. They use PEP 723
   inline dependencies, `with app.setup`, and top-level `@app.function`
   helpers so later notebooks can import them as plain Python modules.
-- `notebooks/__marimo__/session/*.json` should be committed when notebooks can
-  be exported reliably, so molab previews render outputs without re-running.
-- `pyproject.toml` should carry shared tool configuration, especially ruff
-  per-file ignores needed by marimo notebooks and cross-notebook imports.
+- `notebooks/__marimo__/session/*.json` are committed when a notebook exports
+  reliably, so molab previews render outputs without re-running. A snapshot
+  that fails to execute is a signal of a real bug in the notebook, not in the
+  snapshot.
+- `pyproject.toml` carries shared tool configuration: `line-length = 120` and
+  ruff per-file ignores for marimo notebooks (`B018, F401, F821, F841`) so
+  bare display expressions, setup-block imports, and cross-notebook helpers
+  do not trip the linter.
 
 The validation bar is also common: after editing a notebook, run it in a
 marimo sandbox, inspect the actual outputs, export or refresh the molab session
@@ -76,10 +80,10 @@ Intentional differences should be explicit and dataset-driven:
 
 | Repo | Data surface | Auth | Cache / data policy | Extra surface |
 |---|---|---|---|---|
-| `jx` | DuckDB metadata, parquet profiles, S3 images, Zenodo similarity matrices | Public data, no repo secret required | Cache large remote artifacts under `~/.cache/jx` or equivalent | `PLAN.md`, `CITATION.cff`, release workflows, and `queries/` ggsql catalog |
-| `fgx` | FinnGenie `/api/v1/*` REST endpoints via `httpx` | `FINNGENIE_TOKEN` in local `.env`; same key works for REST and MCP | Live API reads; no committed cache | molab snapshots for every notebook |
+| `jx` | DuckDB metadata, parquet profiles, S3 images, Zenodo similarity matrices | Public data, no repo secret required | Cache large remote artifacts under `~/.cache/jx` or equivalent | Primary repo: holds `PLAN.md`, `CITATION.cff`, release workflows, and the `queries/` ggsql catalog |
+| `fgx` | FinnGenie `/api/v1/*` REST endpoints via `httpx` | `FINNGENIE_TOKEN` in local `.env`; same key works for REST and MCP | Live API reads; no committed cache | `Justfile` shortcut (`just notebook`) for direct launch |
 | `prx` | Bond et al. 2025 Figshare/Dryad downloads via `pooch` | Public data, no repo secret required | Raw downloads under ignored `data/`; pin SHA-256 on every fetched artifact | Heavier scientific deps (`rdkit`, `scikit-learn`) |
-| `dmx` | Public DepMap Breadbox REST API via `requests` | Public read-only examples need no API key | Live API reads; summarize large responses before display | Minimal new-instance scaffold |
+| `dmx` | Public DepMap Breadbox REST API via `requests` | Public read-only examples need no API key | Live API reads; summarize large responses before display | — |
 
 Everything else should converge unless there is a concrete reason not to.
 
