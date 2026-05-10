@@ -39,9 +39,7 @@ def entrez_gene_info(
     for id_ in ncbi_ids:
         stream = Entrez.esummary(db="gene", id=id_)
         record = Entrez.read(stream)
-        entries.append(
-            {k: record["DocumentSummarySet"]["DocumentSummary"][0][k] for k in fields}
-        )
+        entries.append({k: record["DocumentSummarySet"]["DocumentSummary"][0][k] for k in fields})
     return pl.DataFrame(entries)
 
 

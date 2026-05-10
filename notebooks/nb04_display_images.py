@@ -39,9 +39,7 @@ def pick_first_site(location_info) -> dict[str, str]:
     """Return the first imaging site as a {Source, Batch, Plate, Well, Site} dict."""
     with duckdb.connect() as con:
         row = (
-            con.sql(
-                "SELECT COLUMNS('Metadata_(Source|Batch|Plate|Well|Site)') FROM location_info"
-            )
+            con.sql("SELECT COLUMNS('Metadata_(Source|Batch|Plate|Well|Site)') FROM location_info")
             .to_arrow_table()
             .to_batches()[0]
             .to_pylist()[0]
@@ -70,8 +68,13 @@ def display_site(
         ax.imshow(img, vmin=0, vmax=np.percentile(img, int_percentile), cmap=cmap)
         ax.axis("off")
         ax.text(
-            0.05, 0.95, channel,
-            ha="left", va="top", fontsize=18, color="black",
+            0.05,
+            0.95,
+            channel,
+            ha="left",
+            va="top",
+            fontsize=18,
+            color="black",
             bbox=dict(facecolor="white", alpha=0.8, edgecolor="none", boxstyle="round,pad=0.3"),
             transform=ax.transAxes,
         )
@@ -104,9 +107,7 @@ def controls():
         value="standard_key",
         label="Query type",
     )
-    intensity_pct = mo.ui.slider(
-        start=95.0, stop=100.0, step=0.5, value=99.5, label="Intensity percentile"
-    )
+    intensity_pct = mo.ui.slider(start=95.0, stop=100.0, step=0.5, value=99.5, label="Intensity percentile")
     mo.hstack([query_input, input_col_selector, intensity_pct])
     return input_col_selector, intensity_pct, query_input
 
@@ -121,10 +122,7 @@ def resolved_sites(input_col_selector, query_input):
 @app.cell
 def first_site_grid(intensity_pct, location_info, query_input):
     site = pick_first_site(location_info)
-    label = (
-        f"{query_input.value}\n\nplate:\n{site['Plate']}\n"
-        f"well: {site['Well']}\nsite: {site['Site']}"
-    )
+    label = f"{query_input.value}\n\nplate:\n{site['Plate']}\nwell: {site['Well']}\nsite: {site['Site']}"
     display_site(
         site["Source"],
         site["Batch"],

@@ -55,9 +55,7 @@ def load_similarity_matrix(dataset: str) -> pl.LazyFrame:
 
 
 @app.function
-def nearest_neighbors(
-    similarities: pl.LazyFrame, query_jcp: str, k: int
-) -> pl.DataFrame:
+def nearest_neighbors(similarities: pl.LazyFrame, query_jcp: str, k: int) -> pl.DataFrame:
     """Top-k JCP2022 IDs by cosine similarity to a query (excluding self)."""
     cols = similarities.collect_schema().names()
     if query_jcp not in cols:
@@ -102,9 +100,7 @@ def controls():
         value="JCP2022_806962",
         label="Query JCP2022 ID",
     )
-    k_neighbors = mo.ui.slider(
-        start=3, stop=12, step=1, value=5, label="Top-k neighbors"
-    )
+    k_neighbors = mo.ui.slider(start=3, stop=12, step=1, value=5, label="Top-k neighbors")
     mo.hstack([dataset_selector, query_input, k_neighbors])
     return dataset_selector, k_neighbors, query_input
 
@@ -112,9 +108,7 @@ def controls():
 @app.cell
 def neighbors_table(dataset_selector, k_neighbors, query_input):
     similarities = load_similarity_matrix(dataset_selector.value)
-    neighbors = nearest_neighbors(
-        similarities, query_input.value, k_neighbors.value
-    )
+    neighbors = nearest_neighbors(similarities, query_input.value, k_neighbors.value)
     return (neighbors,)
 
 
@@ -135,15 +129,9 @@ def annotated_neighbors(dataset_selector, neighbors, query_input):
         annotate_profiles(profiles, jcp_ids)
         .select("Metadata_JCP2022", "name", "pert_type")
         .unique(subset=["Metadata_JCP2022"])
-        .with_columns(
-            pl.col("Metadata_JCP2022")
-            .replace(gene_id_mapper)
-            .alias("ncbi_gene_id")
-        )
+        .with_columns(pl.col("Metadata_JCP2022").replace(gene_id_mapper).alias("ncbi_gene_id"))
     )
-    merged = neighbors.join(
-        annotated, left_on="JCP2022", right_on="Metadata_JCP2022", how="left"
-    )
+    merged = neighbors.join(annotated, left_on="JCP2022", right_on="Metadata_JCP2022", how="left")
 
     merged_table = mo.ui.table(
         merged,

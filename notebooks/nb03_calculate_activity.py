@@ -17,7 +17,9 @@ with app.setup:
     from broad_babel.query import get_mapper
     from copairs.map import average_precision
 
-    PROFILE_INDEX_URL = "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    PROFILE_INDEX_URL = (
+        "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    )
     SUBSETS = ("crispr", "orf", "compound")
     NEGCON_JCP = "JCP2022_800002"
     COPAIRS_BATCH_SIZE = 20000
@@ -32,13 +34,9 @@ def load_profiles(subset: str) -> pl.LazyFrame:
 
 
 @app.function
-def sample_with_negcon(
-    profiles: pl.LazyFrame, n: int, seed: int = 42, negcon: str = NEGCON_JCP
-) -> tuple[str, ...]:
+def sample_with_negcon(profiles: pl.LazyFrame, n: int, seed: int = 42, negcon: str = NEGCON_JCP) -> tuple[str, ...]:
     """Sample n perturbation IDs, appending a known negative control."""
-    jcp_ids = (
-        profiles.select(pl.col("Metadata_JCP2022")).unique().collect().to_series().sort()
-    )
+    jcp_ids = profiles.select(pl.col("Metadata_JCP2022")).unique().collect().to_series().sort()
     sample = jcp_ids.sample(n, seed=seed)
     return (*sample, negcon)
 
@@ -49,21 +47,15 @@ def filter_to_complete_plates(
 ) -> pl.DataFrame:
     """Collect sampled perturbations plus every row on the plates they live on."""
     sampled = profiles.filter(pl.col("Metadata_JCP2022").is_in(jcp_ids)).collect()
-    unique_plates = sampled.filter(pl.col("Metadata_JCP2022") != negcon)[
-        "Metadata_Plate"
-    ].unique()
+    unique_plates = sampled.filter(pl.col("Metadata_JCP2022") != negcon)["Metadata_Plate"].unique()
     return sampled.filter(pl.col("Metadata_Plate").is_in(unique_plates))
 
 
 @app.function
 def attach_pert_type(df: pl.DataFrame, jcp_ids: tuple[str, ...]) -> pl.DataFrame:
     """Attach a broad-babel `pert_type` column to a profile frame."""
-    pert_mapper = get_mapper(
-        jcp_ids, input_column="JCP2022", output_columns="JCP2022,pert_type"
-    )
-    return df.with_columns(
-        pl.col("Metadata_JCP2022").replace(pert_mapper).alias("pert_type")
-    )
+    pert_mapper = get_mapper(jcp_ids, input_column="JCP2022", output_columns="JCP2022,pert_type")
+    return df.with_columns(pl.col("Metadata_JCP2022").replace(pert_mapper).alias("pert_type"))
 
 
 @app.function
@@ -112,9 +104,7 @@ def controls():
         value="crispr",
         label="Dataset",
     )
-    n_samples = mo.ui.slider(
-        start=5, stop=50, step=5, value=10, label="Number of perturbations to sample"
-    )
+    n_samples = mo.ui.slider(start=5, stop=50, step=5, value=10, label="Number of perturbations to sample")
     mo.hstack([subset_selector, n_samples])
     return n_samples, subset_selector
 
@@ -169,9 +159,7 @@ def activity_header():
 
 @app.cell
 def activity_plot(result, subsample):
-    name_mapper = get_mapper(
-        subsample, input_column="JCP2022", output_columns="JCP2022,standard_key"
-    )
+    name_mapper = get_mapper(subsample, input_column="JCP2022", output_columns="JCP2022,standard_key")
     to_plot = result.filter(pl.col("pert_type") == "trt").with_columns(
         pl.col("Metadata_JCP2022").replace(name_mapper).alias("Perturbed gene")
     )

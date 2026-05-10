@@ -23,37 +23,25 @@ with app.setup:
 @app.function
 def latest_zenodo_id(record: str = ZENODO_RECORD) -> str:
     """Resolve the latest versioned record ID for a Zenodo concept record."""
-    return requests.get(
-        f"https://zenodo.org/api/records/{record}/versions/latest"
-    ).json()["id"]
+    return requests.get(f"https://zenodo.org/api/records/{record}/versions/latest").json()["id"]
 
 
 @app.function
 def load_distance_matrix(dataset: str) -> pl.LazyFrame:
     """Lazy-scan the all-vs-all cosine similarity matrix for a dataset."""
     latest_id = latest_zenodo_id()
-    url = (
-        f"https://zenodo.org/api/records/{latest_id}/files/"
-        f"{dataset}_cosinesim_full.parquet/content"
-    )
+    url = f"https://zenodo.org/api/records/{latest_id}/files/{dataset}_cosinesim_full.parquet/content"
     return pl.scan_parquet(url)
 
 
 @app.function
-def sample_submatrix(
-    distances: pl.LazyFrame, n: int, rseed: int = 42
-) -> pl.DataFrame:
+def sample_submatrix(distances: pl.LazyFrame, n: int, rseed: int = 42) -> pl.DataFrame:
     """Pick n random rows+cols and return the corresponding square submatrix."""
     seed_rng(rseed)
     cols = distances.collect_schema().names()
     idx = sorted(choices(range(len(cols)), k=n))
     sampled_cols = [cols[i] for i in idx]
-    return (
-        distances.with_row_index()
-        .filter(pl.col("index").is_in(idx))
-        .select(pl.col(sampled_cols))
-        .collect()
-    )
+    return distances.with_row_index().filter(pl.col("index").is_in(idx)).select(pl.col(sampled_cols)).collect()
 
 
 @app.function
@@ -99,9 +87,7 @@ def controls():
         value="crispr",
         label="Dataset",
     )
-    n_perturbations = mo.ui.slider(
-        start=3, stop=20, step=1, value=3, label="Number of perturbations to sample"
-    )
+    n_perturbations = mo.ui.slider(start=3, stop=20, step=1, value=3, label="Number of perturbations to sample")
     random_seed = mo.ui.number(value=42, label="Random seed")
     mo.hstack([dataset_selector, n_perturbations, random_seed])
     return dataset_selector, n_perturbations, random_seed

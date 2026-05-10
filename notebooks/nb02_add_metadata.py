@@ -14,7 +14,9 @@ with app.setup:
     import requests
     from broad_babel.query import get_mapper
 
-    PROFILE_INDEX_URL = "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    PROFILE_INDEX_URL = (
+        "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    )
     SUBSETS = ("crispr", "orf", "compound")
     NEGCON_JCP = "JCP2022_800002"
 
@@ -28,13 +30,9 @@ def load_profiles(subset: str) -> pl.LazyFrame:
 
 
 @app.function
-def sample_with_negcon(
-    profiles: pl.LazyFrame, n: int, seed: int = 42, negcon: str = NEGCON_JCP
-) -> tuple[str, ...]:
+def sample_with_negcon(profiles: pl.LazyFrame, n: int, seed: int = 42, negcon: str = NEGCON_JCP) -> tuple[str, ...]:
     """Sample n perturbation IDs from a profile frame, appending a known negcon."""
-    jcp_ids = (
-        profiles.select(pl.col("Metadata_JCP2022")).unique().collect().to_series().sort()
-    )
+    jcp_ids = profiles.select(pl.col("Metadata_JCP2022")).unique().collect().to_series().sort()
     sample = jcp_ids.sample(n, seed=seed)
     return (*sample, negcon)
 
@@ -50,9 +48,7 @@ def build_mapper(jcp_ids: tuple[str, ...], output_column: str) -> dict[str, str]
 
 
 @app.function
-def annotate_profiles(
-    profiles: pl.LazyFrame, jcp_ids: tuple[str, ...]
-) -> pl.DataFrame:
+def annotate_profiles(profiles: pl.LazyFrame, jcp_ids: tuple[str, ...]) -> pl.DataFrame:
     """Filter to a JCP subsample and attach pert_type + standard name columns."""
     subset = profiles.filter(pl.col("Metadata_JCP2022").is_in(jcp_ids)).collect()
     pert_mapper = build_mapper(jcp_ids, "pert_type")
@@ -82,9 +78,7 @@ def controls():
         value="crispr",
         label="Dataset",
     )
-    n_samples = mo.ui.slider(
-        start=5, stop=50, step=5, value=10, label="Number of samples"
-    )
+    n_samples = mo.ui.slider(start=5, stop=50, step=5, value=10, label="Number of samples")
     mo.hstack([subset_selector, n_samples])
     return n_samples, subset_selector
 
@@ -112,9 +106,7 @@ def pert_header():
 @app.cell
 def pert_table(subsample):
     pert_mapper = build_mapper(subsample, "pert_type")
-    pl.DataFrame(
-        {"JCP2022": list(pert_mapper.keys()), "pert_type": list(pert_mapper.values())}
-    )
+    pl.DataFrame({"JCP2022": list(pert_mapper.keys()), "pert_type": list(pert_mapper.values())})
     return
 
 
@@ -129,9 +121,7 @@ def name_header():
 @app.cell
 def name_table(subsample):
     name_mapper = build_mapper(subsample, "standard_key")
-    pl.DataFrame(
-        {"JCP2022": list(name_mapper.keys()), "standard_key": list(name_mapper.values())}
-    )
+    pl.DataFrame({"JCP2022": list(name_mapper.keys()), "standard_key": list(name_mapper.values())})
     return
 
 
@@ -146,9 +136,7 @@ def annotated_header():
 @app.cell
 def annotated_table(profiles, subsample):
     profiles_with_meta = annotate_profiles(profiles, subsample)
-    profiles_with_meta.select(
-        pl.col(("name", "pert_type", "^Metadata.*$", "^X_[0-3]$"))
-    ).sort(by="pert_type")
+    profiles_with_meta.select(pl.col(("name", "pert_type", "^Metadata.*$", "^X_[0-3]$"))).sort(by="pert_type")
     return
 
 

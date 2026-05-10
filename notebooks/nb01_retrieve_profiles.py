@@ -21,7 +21,9 @@ with app.setup:
     import polars as pl
     import requests
 
-    PROFILE_INDEX_URL = "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    PROFILE_INDEX_URL = (
+        "https://raw.githubusercontent.com/jump-cellpainting/datasets/v0.11.0/manifests/profile_index.json"
+    )
     SUBSETS = ("crispr", "orf", "compound")
 
 
@@ -84,10 +86,7 @@ def manifest_table():
     display_df = pl.DataFrame(profile_index).select(
         "subset",
         pl.col("url").str.extract(r"([^/]+)\.parquet$").alias("filename"),
-        pl.col("recipe_permalink")
-        .str.extract(r"tree/([^/]+)$")
-        .str.slice(0, 7)
-        .alias("recipe_version"),
+        pl.col("recipe_permalink").str.extract(r"tree/([^/]+)$").str.slice(0, 7).alias("recipe_version"),
         pl.col("config_permalink").str.extract(r"([^/]+)\.json$").alias("config"),
     )
     mo.ui.table(display_df)
