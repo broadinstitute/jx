@@ -1,11 +1,11 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["marimo", "polars", "requests", "broad-babel", "copairs", "seaborn", "matplotlib"]
+# dependencies = ["marimo", "polars", "pyarrow", "requests", "broad-babel", "copairs", "seaborn", "matplotlib"]
 # ///
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.5"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -94,16 +94,14 @@ def compute_map(
 
 @app.cell
 def intro():
-    mo.md(
-        """
-        # Calculate phenotypic activity
+    mo.md("""
+    # Calculate phenotypic activity
 
-        Compute mean average precision (mAP) replicability scores using
-        [copairs](https://github.com/cytomining/copairs). mAP measures how
-        similar replicates of a perturbation are relative to negative controls —
-        higher values indicate stronger, more reproducible phenotypes.
-        """
-    )
+    Compute mean average precision (mAP) replicability scores using
+    [copairs](https://github.com/cytomining/copairs). mAP measures how
+    similar replicates of a perturbation are relative to negative controls —
+    higher values indicate stronger, more reproducible phenotypes.
+    """)
     return
 
 
@@ -128,25 +126,23 @@ def loaded_profiles(subset_selector):
 
 
 @app.cell
-def built_inputs(profiles, n_samples):
+def built_inputs(n_samples, profiles):
     subsample = sample_with_negcon(profiles, n_samples.value)
     perts_controls = filter_to_complete_plates(profiles, subsample)
     perts_controls_annotated = attach_pert_type(perts_controls, subsample)
-    return (perts_controls_annotated, subsample)
+    return perts_controls_annotated, subsample
 
 
 @app.cell
 def map_header():
-    mo.md(
-        """
-        ## copairs mean average precision
+    mo.md("""
+    ## copairs mean average precision
 
-        Parameters: perturbations matched by `Metadata_JCP2022`, negative controls
-        distinguished by `pert_type`. See the
-        [copairs wiki](https://github.com/cytomining/copairs/wiki/Defining-parameters)
-        for details.
-        """
-    )
+    Parameters: perturbations matched by `Metadata_JCP2022`, negative controls
+    distinguished by `pert_type`. See the
+    [copairs wiki](https://github.com/cytomining/copairs/wiki/Defining-parameters)
+    for details.
+    """)
     return
 
 
@@ -165,7 +161,9 @@ def map_result(perts_controls_annotated):
 
 @app.cell
 def activity_header():
-    mo.md("## Activity distribution by gene")
+    mo.md("""
+    ## Activity distribution by gene
+    """)
     return
 
 

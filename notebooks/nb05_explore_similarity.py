@@ -1,11 +1,11 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["marimo", "polars", "requests", "matplotlib", "seaborn"]
+# dependencies = ["marimo", "polars", "pyarrow", "requests", "matplotlib", "seaborn"]
 # ///
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.5"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -78,19 +78,17 @@ def plot_similarity_heatmap(submatrix: pl.DataFrame):
 
 @app.cell
 def intro():
-    mo.md(
-        """
-        # Explore perturbation similarity
+    mo.md("""
+    # Explore perturbation similarity
 
-        Query all-vs-all cosine similarity matrices from
-        [Zenodo](https://zenodo.org/records/13259495) to find phenotypically
-        similar perturbations.
+    Query all-vs-all cosine similarity matrices from
+    [Zenodo](https://zenodo.org/records/13259495) to find phenotypically
+    similar perturbations.
 
-        Values are cosine similarities ranging from 1 (identical profiles)
-        through 0 (uncorrelated) to -1 (perfectly anticorrelated). Sort
-        descending to find nearest neighbors.
-        """
-    )
+    Values are cosine similarities ranging from 1 (identical profiles)
+    through 0 (uncorrelated) to -1 (perfectly anticorrelated). Sort
+    descending to find nearest neighbors.
+    """)
     return
 
 
@@ -117,7 +115,9 @@ def loaded_distances(dataset_selector):
 
 @app.cell
 def submatrix_header():
-    mo.md("## Sampled distance matrix")
+    mo.md("""
+    ## Sampled distance matrix
+    """)
     return
 
 
@@ -130,7 +130,9 @@ def sampled_distances(distances, n_perturbations, random_seed):
 
 @app.cell
 def heatmap_header():
-    mo.md("## Similarity heatmap")
+    mo.md("""
+    ## Similarity heatmap
+    """)
     return
 
 

@@ -5,7 +5,7 @@
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.5"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -85,16 +85,14 @@ def display_site(
 
 @app.cell
 def intro():
-    mo.md(
-        """
-        # Display perturbation images
+    mo.md("""
+    # Display perturbation images
 
-        Retrieve and plot 5-channel fluorescence images from the JUMP Cell Painting
-        dataset using [jump_portrait](https://github.com/broadinstitute/monorepo/tree/main/libs/jump_portrait).
+    Retrieve and plot 5-channel fluorescence images from the JUMP Cell Painting
+    dataset using [jump_portrait](https://github.com/broadinstitute/monorepo/tree/main/libs/jump_portrait).
 
-        Enter a gene name, InChIKey, or JCP2022 ID below.
-        """
-    )
+    Enter a gene name, InChIKey, or JCP2022 ID below.
+    """)
     return
 
 
@@ -114,14 +112,14 @@ def controls():
 
 
 @app.cell
-def resolved_sites(query_input, input_col_selector):
+def resolved_sites(input_col_selector, query_input):
     location_info = lookup_site_metadata(query_input.value, input_col_selector.value)
     mo.md(f"Found **{location_info.shape[0]}** image sites for `{query_input.value}`")
     return (location_info,)
 
 
 @app.cell
-def first_site_grid(location_info, intensity_pct, query_input):
+def first_site_grid(intensity_pct, location_info, query_input):
     site = pick_first_site(location_info)
     label = (
         f"{query_input.value}\n\nplate:\n{site['Plate']}\n"

@@ -5,7 +5,7 @@
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.5"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -65,15 +65,13 @@ def annotate_profiles(
 
 @app.cell
 def intro():
-    mo.md(
-        """
-        # Add metadata to profiles
+    mo.md("""
+    # Add metadata to profiles
 
-        Morphological profiles ship with minimal metadata (source, plate, well, JCP ID).
-        Use [broad-babel](https://github.com/broadinstitute/monorepo/tree/main/libs/jump_babel)
-        to expand: perturbation type (`trt`, `negcon`, `poscon`) and standard gene/compound names.
-        """
-    )
+    Morphological profiles ship with minimal metadata (source, plate, well, JCP ID).
+    Use [broad-babel](https://github.com/broadinstitute/monorepo/tree/main/libs/jump_babel)
+    to expand: perturbation type (`trt`, `negcon`, `poscon`) and standard gene/compound names.
+    """)
     return
 
 
@@ -98,14 +96,16 @@ def loaded_profiles(subset_selector):
 
 
 @app.cell
-def sampled_ids(profiles, n_samples):
+def sampled_ids(n_samples, profiles):
     subsample = sample_with_negcon(profiles, n_samples.value)
     return (subsample,)
 
 
 @app.cell
 def pert_header():
-    mo.md("## Perturbation type mapper")
+    mo.md("""
+    ## Perturbation type mapper
+    """)
     return
 
 
@@ -120,7 +120,9 @@ def pert_table(subsample):
 
 @app.cell
 def name_header():
-    mo.md("## Standard name mapper")
+    mo.md("""
+    ## Standard name mapper
+    """)
     return
 
 
@@ -135,7 +137,9 @@ def name_table(subsample):
 
 @app.cell
 def annotated_header():
-    mo.md("## Profiles with metadata")
+    mo.md("""
+    ## Profiles with metadata
+    """)
     return
 
 

@@ -5,7 +5,7 @@
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.5"
 app = marimo.App(width="medium")
 
 with app.setup:
@@ -53,16 +53,14 @@ def parse_gene_list(raw: str) -> tuple[str, ...]:
 
 @app.cell
 def intro():
-    mo.md(
-        """
-        # Query genes externally
+    mo.md("""
+    # Query genes externally
 
-        Link JUMP gene perturbations to the
-        [NCBI Entrez](https://www.ncbi.nlm.nih.gov/books/NBK25501/) database for
-        gene summaries, descriptions, and synonyms using
-        [Biopython](https://biopython.org/).
-        """
-    )
+    Link JUMP gene perturbations to the
+    [NCBI Entrez](https://www.ncbi.nlm.nih.gov/books/NBK25501/) database for
+    gene summaries, descriptions, and synonyms using
+    [Biopython](https://biopython.org/).
+    """)
     return
 
 
@@ -81,7 +79,7 @@ def controls():
 
 
 @app.cell
-def gene_table(gene_input, email_input):
+def gene_table(email_input, gene_input):
     genes = parse_gene_list(gene_input.value)
     ids = gene_symbols_to_ncbi(genes)
     gene_info = entrez_gene_info(tuple(ids.values()), email_input.value)
