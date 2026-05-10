@@ -1,8 +1,8 @@
 # Plan — agent-composable scientific knowledge
 
 **Lead:** Shantanu Singh
-**Status:** First instance (jx) catalog shipped; paper in progress
-**Last revised:** 2026-05-08
+**Status:** Four public catalog instances shipped; paper in progress
+**Last revised:** 2026-05-10
 
 ## Hypothesis
 
@@ -27,24 +27,24 @@ The catalog is built through an apprenticeship loop in an instrumented environme
 
 The mindset is the MOOC mindset: each vignette should be small, runnable, and self-contained, the way you would prepare material for students who have to execute it on their own without the instructor in the room. Once the catalog is in place, agents — and other users — work against it on their own.
 
-What makes this tractable is that a coding-agent environment (e.g., Claude Code) instruments the work. A scientist solves a real problem in natural language; the interaction is logged; the agent introspects the log and drafts a vignette; the scientist curates. Over iterations, the catalog accumulates tacit knowledge the scientist would never have written down voluntarily — the kind of knowledge Polanyi pointed at when he said *we know more than we can tell*. The apprenticeship loop extends the boundary of what can be made explicit, one vignette at a time.
+What makes this tractable is that a coding-agent environment (e.g., Claude Code) instruments the work. A scientist solves a real problem in natural language; the interaction is logged; the agent introspects the log and drafts a vignette; the scientist curates. Over iterations, the catalog accumulates tacit knowledge the scientist would never have written down voluntarily — the kind of knowledge Polanyi pointed at when he said *we know more than we can tell*. The apprenticeship loop extends the boundary of what can be made explicit, adding new vignettes or updating existing ones.
 
 ## Instances
 
 Instances of the pattern, each targeting a different scientific dataset:
 
-- **[jx](https://github.com/broadinstitute/jx)** — JUMP Cell Painting (imaging). Six vignettes plus a composition demo. DuckDB metadata, parquet profiles, image fetches. The most developed instance; ships with `CITATION.cff` and a Zenodo concept DOI ([`10.5281/zenodo.19598884`](https://doi.org/10.5281/zenodo.19598884)).
-- **[fgx](https://github.com/broadinstitute/fgx)** — FinnGen (genetics, GWAS). Vignettes against FinnGenie's `/api/v1/*` REST surface via `httpx.get`.
-- **[prx](https://github.com/broadinstitute/prx)** — PROSPECT (chemical-genetics). Vignettes against PROSPECT data; same skill pattern.
-- **dmx** (planned) — DepMap (cancer dependencies). To be built around the existing [`depmap-breadbox`](https://github.com/broadinstitute/depmap-breadbox) data API.
+- **[jx](https://github.com/broadinstitute/jx)** — JUMP Cell Painting (imaging). Six vignettes plus a composition demo; DuckDB metadata, parquet profiles, S3 image fetches; polars + duckdb + broad-babel + jump-portrait. The most developed instance; ships with `CITATION.cff` and a Zenodo concept DOI ([`10.5281/zenodo.19598884`](https://doi.org/10.5281/zenodo.19598884)).
+- **[fgx](https://github.com/broadinstitute/fgx)** — FinnGen (genetics, GWAS). Seven vignettes against FinnGenie's `/api/v1/*` REST surface via `httpx.get`; polars + altair. Each notebook ships a committed molab session snapshot so previews render without re-executing.
+- **[prx](https://github.com/broadinstitute/prx)** — PROSPECT (chemical-genetics). Six vignettes pulling Bond et al. 2025 data from Figshare via pooch; sGR GCT matrices, PCL clusters, MOA inference; polars + rdkit + scikit-learn.
+- **[dmx](https://github.com/broadinstitute/dmx)** — DepMap (cancer dependencies). Initial five-notebook scaffold against the public Breadbox REST API; read-only examples require no API key; orientation, dataset discovery, gene dependency profiles, context comparisons, and association queries; requests + polars + altair.
 
-All instances are skill-light marimo catalogs.
+All four built instances are skill-light marimo catalogs.
 
 ## Computational screens
 
 Once a catalog is mature, screens become possible. The vignettes define what you can sweep over - genes, compounds, cell lines, conditions - and the agent composes one analysis per point in that space. Each composed notebook is a re-runnable artifact, independent of the agent run that produced it. The ranked output gets triaged the way a Cell Painting or a CRISPR screen does: most hits are noise, a few hold up under follow-up.
 
-Whole-genome screens taught us how to fan out across a perturbation set, score, rank, validate, and cull. Same shape here - the unit being screened is a hypothesis rather than a guide RNA or a compound.
+Whole-genome screens taught us how to fan out across a perturbation set, score, rank, validate, and cull. Same idea here - but the unit being screened is a hypothesis rather than a guide RNA or a compound.
 
 Three subproblems:
 
@@ -76,7 +76,7 @@ A small, curated catalog of vignettes plus a thin orientation skill plus a live 
 ### Structure
 
 1. Introduction.
-2. Related work — nbdev, MCP tool servers, Python libraries, flat skill files, Biomni.
+2. Related work — nbdev, MCP tool servers, direct REST/API access, Python libraries, flat skill files, Biomni.
 3. The pattern — vignettes vs composed notebooks; thin skill + curated catalog + marimo-pair; cell hoisting, parameterization, live kernel execution.
 4. Building a catalog — the apprenticeship loop in an instrumented environment; MOOC-style vignette design; scientist solves, agent drafts, scientist curates.
 5. Instances — jx, fgx, prx, dmx.
@@ -92,7 +92,7 @@ A small, curated catalog of vignettes plus a thin orientation skill plus a live 
 ### Figures and tables
 
 - **Figure 1.** Composition flow: skill → vignette catalog → marimo kernel → composed notebook.
-- **Figure 2.** Composition demo output — jx primarily, with siblings if their demos are end-to-end runnable by submission.
+- **Figure 2.** Composition demo output — jx primarily, with sibling demos from fgx, prx, and dmx.
 - **Table 1.** Instances summary: dataset, data surface (DuckDB / REST / API), vignette count, status.
 - **Table 2.** Comparison across approaches: MCP tools / Python library / flat skill file / vignette catalog × reproducibility, composition, extensibility, dual-readability, scaling, response sizes.
 
@@ -102,7 +102,7 @@ Draft May-June, revision and bioRxiv preprint July, journal submission August, r
 
 ### Remaining
 
-The manuscript itself; Figures 1 and 2; Tables 1 and 2; dmx scaffold so it can be referenced as in-progress rather than aspirational.
+The manuscript itself; Figures 1 and 2; Tables 1 and 2; evaluation questions and composed-demo notebooks for fgx, prx, and dmx; dmx curation beyond the initial scaffold.
 
 ## Open questions
 
