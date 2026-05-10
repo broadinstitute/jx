@@ -190,6 +190,9 @@ The manuscript itself; Figures 1 and 2; Tables 1 and 2; evaluation questions and
 - Screen volume vs. inspectability.
   The promise that every hit and every miss is a re-runnable notebook is what distinguishes this from a black-box generation pipeline.
   Whether that holds at thousand-analysis scale, or whether triage itself becomes the bottleneck, is unresolved.
+- Static-preview fidelity.
+  The molab preview is what external readers see, but it is a renderer-limited subset of the live editor: snapshot `code_hash` mismatch after a formatter pass silently strips outputs, raw `application/vnd.vegalite.v6+json` mimetypes do not render without an `mo.ui.altair_chart` wrap, and oversized cell outputs trip the `output_max_bytes` ceiling.
+  Today the gaps are documented and worked around in `compose-notebook/SKILL.md`, but at scale this may need either a stricter "preview-safe" subset rule for catalog cells or a linter that auto-flags risky cell outputs before they ship.
 
 ## Authors
 
