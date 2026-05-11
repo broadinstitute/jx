@@ -2,13 +2,11 @@
 
 An experiment in agent-driven scientific data exploration, built around [JUMP Cell Painting](https://jump-cellpainting.broadinstitute.org/) — the largest public morphological profiling dataset (~116K compounds, ~8K CRISPR knockouts, ~15K gene overexpressions, 1.6 billion cells).
 
-## What this is
-
 jx is a curated catalog of [marimo](https://marimo.io) vignettes for JUMP analysis, plus a thin skill that lets an agent compose new analyses from them.
 Each vignette is both a runnable demonstration and a source of pure functions other notebooks can [import and reuse](https://docs.marimo.io/guides/reusing_functions/) directly.
 Given a new biological question, the agent picks relevant vignettes, composes their functions into a new notebook, executes it in a live kernel, and hands back a self-contained, re-runnable result.
 
-For the hypothesis, the catalog walkthrough, and the project roadmap, see **[PLAN.md](PLAN.md)**.
+For the hypothesis, the catalog walkthrough, and the project roadmap, see [PLAN.md](PLAN.md).
 
 ## The catalog
 
@@ -40,14 +38,9 @@ Claude Code auto-loads `.claude/skills/` from the working directory, so no separ
 The skill file is the canonical setup doc.
 Read it directly if you want to run the commands by hand without the agent.
 
-> **Why no `npx skills add broadinstitute/jx`?** The skills here reference in-repo paths (the notebook catalog, `queries/data/jump_metadata.duckdb`, rendered SVGs) and only work alongside the rest of the repo — installing the markdown into an unrelated project leaves the skill with dangling pointers.
-Clone the repo; that's the install.
+There is no `npx skills add broadinstitute/jx` flow: the skills reference in-repo paths (the notebook catalog, `queries/data/jump_metadata.duckdb`, rendered SVGs) and only work alongside the rest of the repo, so installing the markdown into an unrelated project leaves the skill with dangling pointers.
+Clone the repo to install.
 
 ## License
 
 BSD 3-Clause — see [LICENSE](LICENSE).
-
-## Status
-
-Active experiment by a team at the Broad Institute.
-See [PLAN.md](PLAN.md) for current direction.
