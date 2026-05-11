@@ -94,6 +94,11 @@ Intentional differences should be explicit and dataset-driven:
 
 Everything else should converge unless there is a concrete reason not to.
 
+## The jx SQL surface
+
+In addition to the notebook catalog, jx ships a parallel SQL surface at [`queries/`](queries/) — self-contained [ggsql](https://ggsql.org) files that answer single-chart questions against the canonical JUMP metadata DuckDB.
+The [`compose-query`](.claude/skills/compose-query/SKILL.md) skill teaches the agent which surface to pick: notebooks for Python-glue analyses, queries for pure-SQL questions.
+
 ## Computational screens
 
 Once a catalog is mature, screens become possible.
