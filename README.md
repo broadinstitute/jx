@@ -31,12 +31,17 @@ Related public catalogs of the same pattern: [fgx](https://github.com/broadinsti
 
 ## Getting started
 
-Clone this repo, open [Claude Code](https://code.claude.com/docs) inside the clone, and ask: *help me get started*.
-The `getting-started` skill (at [`.claude/skills/getting-started/SKILL.md`](.claude/skills/getting-started/SKILL.md)) installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) skill), launches the demo notebook in a live marimo kernel, and hands off to the `compose-notebook` skill so you can compose analyses against the catalog.
-Claude Code auto-loads `.claude/skills/` from the working directory, so no separate install step is needed.
+Clone this repo, open [Claude Code](https://code.claude.com/docs) inside it, and ask: *help me get started*.
+The `getting-started` skill installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) skill), launches `nb07_compound_neighborhood` in a live marimo kernel, and hands off to the `compose-notebook` skill for the actual analysis.
 
-The skill file is the canonical setup doc.
-Read it directly if you want to run the commands by hand without the agent.
+If you prefer to run setup by hand:
+
+```bash
+uv --version  # or: curl -LsSf https://astral.sh/uv/install.sh | sh
+AGENT=claude-code  # or: codex
+npx skills add marimo-team/marimo-pair -g --agent "$AGENT" -y
+uvx marimo edit --sandbox notebooks/nb07_compound_neighborhood.py
+```
 
 There is no `npx skills add broadinstitute/jx` flow: the skills reference in-repo paths (the notebook catalog, `queries/data/jump_metadata.duckdb`, rendered SVGs) and only work alongside the rest of the repo, so installing the markdown into an unrelated project leaves the skill with dangling pointers.
 Clone the repo to install.
