@@ -41,8 +41,7 @@ npx skills add marimo-team/marimo-pair -g --agent "$AGENT" -y
 uvx marimo edit --sandbox notebooks/nb07_compound_neighborhood.py
 ```
 
-There is no `npx skills add broadinstitute/jx` flow: the skills reference in-repo paths (the notebook catalog, `queries/data/jump_metadata.duckdb`, rendered SVGs) and only work alongside the rest of the repo, so installing the markdown into an unrelated project leaves the skill with dangling pointers.
-Clone the repo to install.
+The skills reference in-repo notebooks and assets, so they only work in the cloned repo — there's no `npx skills add broadinstitute/jx` flow.
 
 ## License
 
