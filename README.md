@@ -10,6 +10,8 @@ For the hypothesis, the catalog walkthrough, and the project roadmap, see [PLAN.
 
 ## The catalog
 
+Each notebook ships with a committed session snapshot under [`notebooks/__marimo__/session/`](notebooks/__marimo__/session/) so the molab preview renders cell outputs without re-executing.
+
 Six vignettes adapted from [JUMP-Hub](https://github.com/broadinstitute/jump_hub), covering the building blocks of JUMP analysis: profile retrieval, metadata annotation, morphological activity (mAP), Cell Painting image display, similarity search, and gene annotation.
 A seventh notebook (`nb07_compound_neighborhood.py`) is the composition demo — given a compound of interest, find what's morphologically similar, annotate the neighbors with targets, and show the images side by side.
 It composes the first six and runs end to end.
