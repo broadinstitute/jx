@@ -61,6 +61,26 @@ with app.setup:
     from scipy.cluster.hierarchy import leaves_list, linkage
     from scipy.spatial.distance import squareform
 
+    # Detect Pyodide / WASM. In-browser, the cosine-matrix files on Zenodo are far
+    # too large to fetch in full (orf 813 MB, crispr 228 MB, compound 47 GB) and
+    # DuckDB httpfs is unavailable. Instead we ship pre-baked per-panel slim
+    # parquets under `./wasm_data/<panel>/<modality>_<kind>.parquet`, fetched
+    # via the bundle's relative URL. Local CPython users go straight to Zenodo
+    # with DuckDB column projection.
+    try:
+        import pyodide  # noqa: F401
+
+        IN_WASM = True
+        from js import location as _location
+
+        _href = str(_location.href).split("?")[0].split("#")[0]
+        if not _href.endswith("/"):
+            _href = _href.rsplit("/", 1)[0] + "/"
+        BAKED_BASE_URL: str | None = _href + "wasm_data/mmp/"
+    except ImportError:
+        IN_WASM = False
+        BAKED_BASE_URL = None
+
     ZENODO_RECORD = "15029005"
     GENE_MODALITIES = ("orf", "crispr")
     COMPOUND_MODALITY = "compound"
@@ -232,9 +252,24 @@ def resolve_jcps(items: list[str], allowed_modalities: tuple[str, ...]) -> dict[
 
 
 @app.function
+def try_baked_table(filename: str) -> "pa.Table | None":
+    """Fetch a pre-baked panel parquet from the bundle's wasm_data dir; None if absent."""
+    if BAKED_BASE_URL is None:
+        return None
+    try:
+        return fetch_parquet_table(BAKED_BASE_URL + filename)
+    except Exception:
+        return None
+
+
+@app.function
 def activity_table(modality: str) -> pd.DataFrame:
-    """Per-perturbation corrected p / activity from Zenodo `{modality}_gallery.parquet`.
-    Pyarrow column projection on a single HTTP fetch — works in CPython AND Pyodide."""
+    """Per-perturbation corrected p / activity. Tries the pre-baked slim parquet first
+    (instant fetch in WASM, ~100 KB-2 MB per modality), falls back to Zenodo gallery
+    (works in CPython, may OOM in WASM for compound)."""
+    baked = try_baked_table(f"{modality}_activity.parquet")
+    if baked is not None:
+        return baked.to_pandas()
     url = zenodo_file_url(f"{modality}_gallery.parquet")
     table = fetch_parquet_table(
         url,
@@ -253,16 +288,33 @@ def activity_table(modality: str) -> pd.DataFrame:
 
 @app.function
 def panel_submatrix(modality: str, jcp_to_label: dict[str, str]) -> pd.DataFrame:
-    """Slice the Zenodo cosine matrix to panel JCPs and aggregate to per-label means.
-
-    Uses pyarrow column projection (works in both CPython and Pyodide). The cosine
-    parquet is fetched in full once (Zenodo doesn't expose HTTP range requests
-    through pyarrow's HTTP layer), then pyarrow reads only the panel columns into
-    memory. ~250 MB per modality download on a cold session in WASM — slow on
-    first use but cached in browser memory for the session.
-    """
+    """Per-label cosine submatrix. Tries the pre-baked panel parquet first; if every
+    requested JCP is present, returns the aggregated per-label means with no network
+    fetch beyond a single small (~few KB) parquet. Otherwise falls back to fetching
+    the full Zenodo cosine matrix (works locally; will OOM in WASM for orf/compound)."""
     if not jcp_to_label:
         return pd.DataFrame()
+
+    baked = try_baked_table(f"{modality}_cosine.parquet")
+    if baked is not None:
+        df = baked.to_pandas().set_index("jcp")
+        requested = set(jcp_to_label.keys())
+        if requested.issubset(set(df.columns)) and requested.issubset(set(df.index)):
+            keep = sorted(requested)
+            sub = df.loc[keep, keep]
+            sub.index = [jcp_to_label[j] for j in sub.index]
+            sub.columns = [jcp_to_label[c] for c in sub.columns]
+            pdf = sub.groupby(level=0).mean()
+            pdf = pdf.T.groupby(level=0).mean().T
+            return pdf.sort_index(axis=0).sort_index(axis=1)
+        if IN_WASM:
+            raise RuntimeError(
+                f"In-browser mode only supports the pre-baked panel for `{modality}`. "
+                f"Requested {len(requested)} JCPs; baked panel has {len(set(df.columns))}. "
+                f"Run this notebook locally (with DuckDB + Zenodo httpfs) to query arbitrary panels."
+            )
+
+    # Local fallback: full Zenodo fetch + pyarrow column projection.
     url = zenodo_file_url(f"{modality}_cosinesim_full.parquet")
     all_cols = fetch_parquet_schema_names(url)
     keep = [c for c in all_cols if c in jcp_to_label]

@@ -65,6 +65,12 @@ jobs:
             echo "::group::Building $name"
             if uvx marimo export html-wasm --mode run -o "_site/$name" "$nb" 2>&1; then
               built+=("$name")
+              # Copy pre-baked panel parquets (Zenodo cosine matrices are too big
+              # to fetch in full from a browser) alongside the bundle so the
+              # notebook can fetch them via relative URL at runtime.
+              if [ -d wasm_data ]; then
+                cp -r wasm_data "_site/$name/wasm_data"
+              fi
               echo "::endgroup::"
             else
               failed+=("$name")
