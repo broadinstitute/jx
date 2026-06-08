@@ -20,6 +20,11 @@ app = marimo.App(width="medium")
 with app.setup:
     import re
 
+    # Explicit `import sqlite3` so Pyodide's `loadPackagesFromImports` pulls in the
+    # sqlite3 wheel before `broad_babel.query` does its own `import sqlite3`. Without
+    # this, broad_babel fails on WASM with `ModuleNotFoundError: No module named 'sqlite3'`.
+    import sqlite3  # noqa: F401
+
     import duckdb
     import marimo as mo
     import numpy as np
