@@ -18,6 +18,7 @@ __generated_with = "0.23.8"
 app = marimo.App(width="medium")
 
 with app.setup:
+    import os
     import re
 
     # Explicit stdlib imports so Pyodide's `loadPackagesFromImports` pulls in the
@@ -34,6 +35,27 @@ with app.setup:
     import pandas as pd
     import plotly.graph_objects as go
     import requests
+
+    # broad_babel.query calls pooch.retrieve('https://zenodo.org/records/12211976/files/babel.db')
+    # at import time, which has NO CORS header — fails in browser/Pyodide.
+    # The /api/records/.../files/.../content endpoint is CORS-open, so pre-populate
+    # pooch's cache via that URL before importing broad_babel. No-op outside Pyodide
+    # (the file is either already cached locally or pooch's normal download works).
+    _POOCH_BABEL_CACHE = os.path.expanduser("~/.cache/pooch/2eaa6a2f4915f72d7100683f53982ed8-babel.db")
+    if not os.path.exists(_POOCH_BABEL_CACHE):
+        os.makedirs(os.path.dirname(_POOCH_BABEL_CACHE), exist_ok=True)
+        try:
+            _resp = requests.get(
+                "https://zenodo.org/api/records/12211976/files/babel.db/content",
+                allow_redirects=True,
+                timeout=120,
+            )
+            _resp.raise_for_status()
+            with open(_POOCH_BABEL_CACHE, "wb") as _f:
+                _f.write(_resp.content)
+        except Exception:
+            pass  # let pooch try its own download — local runs work fine without this
+
     from broad_babel.query import run_query
     from scipy.cluster.hierarchy import leaves_list, linkage
     from scipy.spatial.distance import squareform
