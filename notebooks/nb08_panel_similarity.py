@@ -7,6 +7,7 @@
 #     "numpy",
 #     "pandas",
 #     "plotly",
+#     "pyarrow",
 #     "requests",
 #     "scipy",
 # ]
@@ -145,10 +146,42 @@ with app.setup:
 
 @app.function
 def duck() -> "duckdb.DuckDBPyConnection":
-    """Fresh in-memory DuckDB connection with httpfs loaded (CORS-friendly parquet reads)."""
+    """Fresh in-memory DuckDB connection. Tries to LOAD httpfs (already INSTALLED on
+    a fresh local CPython env) so `read_parquet('https://...')` works; in Pyodide
+    httpfs can't be downloaded over HTTP, so we fall through silently and use
+    `fetch_parquet_table` (requests + pyarrow) for HTTP reads instead."""
     con = duckdb.connect()
-    con.execute("INSTALL httpfs; LOAD httpfs;")
+    try:
+        con.execute("INSTALL httpfs; LOAD httpfs;")
+    except Exception:
+        pass
     return con
+
+
+@app.function
+def fetch_parquet_table(url: str, columns: list[str] | None = None) -> "pa.Table":
+    """HTTP-fetch a parquet file and read with pyarrow (optional column projection).
+    Works in both CPython and Pyodide — no DuckDB httpfs required."""
+    import io
+
+    import pyarrow.parquet as pq
+
+    resp = requests.get(url, allow_redirects=True, timeout=600)
+    resp.raise_for_status()
+    return pq.read_table(io.BytesIO(resp.content), columns=columns)
+
+
+@app.function
+def fetch_parquet_schema_names(url: str) -> list[str]:
+    """Fetch a parquet file (full download) and return its column names. Used to discover
+    which JCP columns are present in the cosine matrix before column projection."""
+    import io
+
+    import pyarrow.parquet as pq
+
+    resp = requests.get(url, allow_redirects=True, timeout=600)
+    resp.raise_for_status()
+    return pq.ParquetFile(io.BytesIO(resp.content)).schema_arrow.names
 
 
 @app.function
@@ -200,41 +233,44 @@ def resolve_jcps(items: list[str], allowed_modalities: tuple[str, ...]) -> dict[
 
 @app.function
 def activity_table(modality: str) -> pd.DataFrame:
-    """Per-perturbation corrected p / activity via DuckDB over Zenodo `{modality}_gallery.parquet`.
-    Reads only the columns we need, no local cache (works in pyodide/WASM)."""
+    """Per-perturbation corrected p / activity from Zenodo `{modality}_gallery.parquet`.
+    Pyarrow column projection on a single HTTP fetch — works in CPython AND Pyodide."""
     url = zenodo_file_url(f"{modality}_gallery.parquet")
-    con = duck()
-    df = con.execute(
-        f"""
-        SELECT Perturbation,
-               FIRST("Corrected p-value") AS corrected_p,
-               FIRST("Phenotypic activity") AS phenotypic_activity,
-               FIRST("JCP2022") AS jcp
-        FROM read_parquet('{url}')
-        GROUP BY Perturbation
-        """
-    ).df()
-    con.close()
-    return df
+    table = fetch_parquet_table(
+        url,
+        columns=["Perturbation", "Corrected p-value", "Phenotypic activity", "JCP2022"],
+    )
+    df = table.to_pandas().rename(
+        columns={
+            "Corrected p-value": "corrected_p",
+            "Phenotypic activity": "phenotypic_activity",
+            "JCP2022": "jcp",
+        }
+    )
+    # First non-null row per perturbation (mimics DuckDB FIRST()).
+    return df.groupby("Perturbation", as_index=False).first()
 
 
 @app.function
 def panel_submatrix(modality: str, jcp_to_label: dict[str, str]) -> pd.DataFrame:
-    """Slice the Zenodo cosine matrix to panel JCPs via DuckDB column projection
-    (HTTP range requests pull only the needed column chunks). Aggregate to per-label means."""
+    """Slice the Zenodo cosine matrix to panel JCPs and aggregate to per-label means.
+
+    Uses pyarrow column projection (works in both CPython and Pyodide). The cosine
+    parquet is fetched in full once (Zenodo doesn't expose HTTP range requests
+    through pyarrow's HTTP layer), then pyarrow reads only the panel columns into
+    memory. ~250 MB per modality download on a cold session in WASM — slow on
+    first use but cached in browser memory for the session.
+    """
     if not jcp_to_label:
         return pd.DataFrame()
     url = zenodo_file_url(f"{modality}_cosinesim_full.parquet")
-    con = duck()
-    all_cols = con.execute(f"DESCRIBE SELECT * FROM read_parquet('{url}') LIMIT 0").df()["column_name"].tolist()
+    all_cols = fetch_parquet_schema_names(url)
     keep = [c for c in all_cols if c in jcp_to_label]
     if not keep:
-        con.close()
         return pd.DataFrame()
     keep_idx = sorted(all_cols.index(c) for c in keep)
-    col_list = ", ".join(f'"{c}"' for c in keep)
-    col_only = con.execute(f"SELECT {col_list} FROM read_parquet('{url}')").df()
-    con.close()
+    table = fetch_parquet_table(url, columns=keep)
+    col_only = table.to_pandas()
     sub_np = col_only.to_numpy()[keep_idx, :]
     row_jcps = [all_cols[i] for i in keep_idx]
     pdf = pd.DataFrame(
