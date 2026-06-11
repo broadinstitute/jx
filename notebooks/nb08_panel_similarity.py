@@ -7,7 +7,6 @@
 #     "numpy",
 #     "pandas",
 #     "plotly",
-#     "pyarrow",
 #     "requests",
 #     "scipy",
 # ]
@@ -19,16 +18,7 @@ __generated_with = "0.23.8"
 app = marimo.App(width="medium")
 
 with app.setup:
-    import os
     import re
-
-    # Explicit stdlib imports so Pyodide's `loadPackagesFromImports` pulls in the
-    # split-out wheels before `broad_babel.query` triggers them transitively:
-    #   - sqlite3 (broad_babel.query → import sqlite3)
-    #   - lzma    (broad_babel.query → pooch → pooch.processors → Decompress → lzma)
-    # Without these, broad_babel fails to import on WASM with ModuleNotFoundError.
-    import lzma  # noqa: F401
-    import sqlite3  # noqa: F401
 
     import duckdb
     import marimo as mo
@@ -36,50 +26,9 @@ with app.setup:
     import pandas as pd
     import plotly.graph_objects as go
     import requests
-
-    # broad_babel.query calls pooch.retrieve('https://zenodo.org/records/12211976/files/babel.db')
-    # at import time, which has NO CORS header — fails in browser/Pyodide.
-    # The /api/records/.../files/.../content endpoint is CORS-open, so pre-populate
-    # pooch's cache via that URL before importing broad_babel. No-op outside Pyodide
-    # (the file is either already cached locally or pooch's normal download works).
-    _POOCH_BABEL_CACHE = os.path.expanduser("~/.cache/pooch/2eaa6a2f4915f72d7100683f53982ed8-babel.db")
-    if not os.path.exists(_POOCH_BABEL_CACHE):
-        os.makedirs(os.path.dirname(_POOCH_BABEL_CACHE), exist_ok=True)
-        try:
-            _resp = requests.get(
-                "https://zenodo.org/api/records/12211976/files/babel.db/content",
-                allow_redirects=True,
-                timeout=120,
-            )
-            _resp.raise_for_status()
-            with open(_POOCH_BABEL_CACHE, "wb") as _f:
-                _f.write(_resp.content)
-        except Exception:
-            pass  # let pooch try its own download — local runs work fine without this
-
     from broad_babel.query import run_query
     from scipy.cluster.hierarchy import leaves_list, linkage
     from scipy.spatial.distance import squareform
-
-    # Detect Pyodide / WASM. In-browser, the cosine-matrix files on Zenodo are far
-    # too large to fetch in full (orf 813 MB, crispr 228 MB, compound 47 GB) and
-    # DuckDB httpfs is unavailable. Instead we ship pre-baked per-panel slim
-    # parquets under `./wasm_data/<panel>/<modality>_<kind>.parquet`, fetched
-    # via the bundle's relative URL. Local CPython users go straight to Zenodo
-    # with DuckDB column projection.
-    try:
-        import pyodide  # noqa: F401
-
-        IN_WASM = True
-        from js import location as _location
-
-        _href = str(_location.href).split("?")[0].split("#")[0]
-        if not _href.endswith("/"):
-            _href = _href.rsplit("/", 1)[0] + "/"
-        BAKED_BASE_URL: str | None = _href + "wasm_data/mmp/"
-    except ImportError:
-        IN_WASM = False
-        BAKED_BASE_URL = None
 
     ZENODO_RECORD = "15029005"
     GENE_MODALITIES = ("orf", "crispr")
@@ -166,42 +115,10 @@ with app.setup:
 
 @app.function
 def duck() -> "duckdb.DuckDBPyConnection":
-    """Fresh in-memory DuckDB connection. Tries to LOAD httpfs (already INSTALLED on
-    a fresh local CPython env) so `read_parquet('https://...')` works; in Pyodide
-    httpfs can't be downloaded over HTTP, so we fall through silently and use
-    `fetch_parquet_table` (requests + pyarrow) for HTTP reads instead."""
+    """Fresh in-memory DuckDB connection with httpfs loaded (CORS-friendly parquet reads)."""
     con = duckdb.connect()
-    try:
-        con.execute("INSTALL httpfs; LOAD httpfs;")
-    except Exception:
-        pass
+    con.execute("INSTALL httpfs; LOAD httpfs;")
     return con
-
-
-@app.function
-def fetch_parquet_table(url: str, columns: list[str] | None = None) -> "pa.Table":
-    """HTTP-fetch a parquet file and read with pyarrow (optional column projection).
-    Works in both CPython and Pyodide — no DuckDB httpfs required."""
-    import io
-
-    import pyarrow.parquet as pq
-
-    resp = requests.get(url, allow_redirects=True, timeout=600)
-    resp.raise_for_status()
-    return pq.read_table(io.BytesIO(resp.content), columns=columns)
-
-
-@app.function
-def fetch_parquet_schema_names(url: str) -> list[str]:
-    """Fetch a parquet file (full download) and return its column names. Used to discover
-    which JCP columns are present in the cosine matrix before column projection."""
-    import io
-
-    import pyarrow.parquet as pq
-
-    resp = requests.get(url, allow_redirects=True, timeout=600)
-    resp.raise_for_status()
-    return pq.ParquetFile(io.BytesIO(resp.content)).schema_arrow.names
 
 
 @app.function
@@ -252,77 +169,42 @@ def resolve_jcps(items: list[str], allowed_modalities: tuple[str, ...]) -> dict[
 
 
 @app.function
-def try_baked_table(filename: str) -> "pa.Table | None":
-    """Fetch a pre-baked panel parquet from the bundle's wasm_data dir; None if absent."""
-    if BAKED_BASE_URL is None:
-        return None
-    try:
-        return fetch_parquet_table(BAKED_BASE_URL + filename)
-    except Exception:
-        return None
-
-
-@app.function
 def activity_table(modality: str) -> pd.DataFrame:
-    """Per-perturbation corrected p / activity. Tries the pre-baked slim parquet first
-    (instant fetch in WASM, ~100 KB-2 MB per modality), falls back to Zenodo gallery
-    (works in CPython, may OOM in WASM for compound)."""
-    baked = try_baked_table(f"{modality}_activity.parquet")
-    if baked is not None:
-        return baked.to_pandas()
+    """Per-perturbation corrected p / activity via DuckDB over Zenodo `{modality}_gallery.parquet`.
+    Reads only the columns we need, no local cache (works in pyodide/WASM)."""
     url = zenodo_file_url(f"{modality}_gallery.parquet")
-    table = fetch_parquet_table(
-        url,
-        columns=["Perturbation", "Corrected p-value", "Phenotypic activity", "JCP2022"],
-    )
-    df = table.to_pandas().rename(
-        columns={
-            "Corrected p-value": "corrected_p",
-            "Phenotypic activity": "phenotypic_activity",
-            "JCP2022": "jcp",
-        }
-    )
-    # First non-null row per perturbation (mimics DuckDB FIRST()).
-    return df.groupby("Perturbation", as_index=False).first()
+    con = duck()
+    df = con.execute(
+        f"""
+        SELECT Perturbation,
+               FIRST("Corrected p-value") AS corrected_p,
+               FIRST("Phenotypic activity") AS phenotypic_activity,
+               FIRST("JCP2022") AS jcp
+        FROM read_parquet('{url}')
+        GROUP BY Perturbation
+        """
+    ).df()
+    con.close()
+    return df
 
 
 @app.function
 def panel_submatrix(modality: str, jcp_to_label: dict[str, str]) -> pd.DataFrame:
-    """Per-label cosine submatrix. Tries the pre-baked panel parquet first; if every
-    requested JCP is present, returns the aggregated per-label means with no network
-    fetch beyond a single small (~few KB) parquet. Otherwise falls back to fetching
-    the full Zenodo cosine matrix (works locally; will OOM in WASM for orf/compound)."""
+    """Slice the Zenodo cosine matrix to panel JCPs via DuckDB column projection
+    (HTTP range requests pull only the needed column chunks). Aggregate to per-label means."""
     if not jcp_to_label:
         return pd.DataFrame()
-
-    baked = try_baked_table(f"{modality}_cosine.parquet")
-    if baked is not None:
-        df = baked.to_pandas().set_index("jcp")
-        requested = set(jcp_to_label.keys())
-        if requested.issubset(set(df.columns)) and requested.issubset(set(df.index)):
-            keep = sorted(requested)
-            sub = df.loc[keep, keep]
-            sub.index = [jcp_to_label[j] for j in sub.index]
-            sub.columns = [jcp_to_label[c] for c in sub.columns]
-            pdf = sub.groupby(level=0).mean()
-            pdf = pdf.T.groupby(level=0).mean().T
-            return pdf.sort_index(axis=0).sort_index(axis=1)
-        if IN_WASM:
-            raise RuntimeError(
-                f"In-browser mode only supports the pre-baked panel for `{modality}`. "
-                f"Requested {len(requested)} JCPs; baked panel has {len(set(df.columns))}. "
-                f"Run this notebook locally (with DuckDB + Zenodo httpfs) to query arbitrary panels."
-            )
-
-    # Local fallback: full Zenodo fetch + pyarrow column projection.
     url = zenodo_file_url(f"{modality}_cosinesim_full.parquet")
-    all_cols = fetch_parquet_schema_names(url)
+    con = duck()
+    all_cols = con.execute(f"DESCRIBE SELECT * FROM read_parquet('{url}') LIMIT 0").df()["column_name"].tolist()
     keep = [c for c in all_cols if c in jcp_to_label]
     if not keep:
+        con.close()
         return pd.DataFrame()
     keep_idx = sorted(all_cols.index(c) for c in keep)
-    table = fetch_parquet_table(url, columns=keep)
-    col_only = table.to_pandas()
+    col_list = ", ".join(f'"{c}"' for c in keep)
+    col_only = con.execute(f"SELECT {col_list} FROM read_parquet('{url}')").df()
+    con.close()
     sub_np = col_only.to_numpy()[keep_idx, :]
     row_jcps = [all_cols[i] for i in keep_idx]
     pdf = pd.DataFrame(
