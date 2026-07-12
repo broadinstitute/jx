@@ -26,19 +26,18 @@ Related public catalogs of the same pattern: [fgx](https://github.com/broadinsti
 
 ## Getting started
 
-Clone this repo, open [Claude Code](https://code.claude.com/docs) inside it, and ask: *help me get started*.
-The `getting-started` skill installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) skill), launches `nb07_compound_neighborhood` in a live marimo kernel, and hands off to the `compose-notebook` skill for the actual analysis.
-
-If you prefer to run setup by hand:
+This catalog follows the [vignette-catalog-skills](https://github.com/carpenter-singh-lab/vignette-catalog-skills) pattern.
+The skill stores are gitignored, so a fresh clone has only `skills-lock.json`; restore the on-disk skill content first:
 
 ```bash
 uv --version  # or: curl -LsSf https://astral.sh/uv/install.sh | sh
-AGENT=claude-code  # or: codex
-npx skills add marimo-team/marimo-pair -g --agent "$AGENT" -y
-uvx marimo edit --sandbox notebooks/nb07_compound_neighborhood.py
+npx skills add carpenter-singh-lab/vignette-catalog-skills --agent claude-code -y
+npx skills add marimo-team/marimo-pair --agent claude-code -y
 ```
 
-The skills reference in-repo notebooks and assets, so they only work in the cloned repo — there's no `npx skills add broadinstitute/jx` flow.
+Then open [Claude Code](https://code.claude.com/docs) in this repo and ask to *get started* - the `vignette-catalog-setup` skill installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) skill), launches `nb07_compound_neighborhood` in a live marimo kernel, and hands off to `vignette-catalog-compose-notebook` for the actual analysis.
+
+jx also ships a repo-local `compose-query` skill (tracked under `.claude/skills/compose-query/`) for the parallel ggsql catalog under `queries/` - pure SQL + chart questions against the JUMP metadata DuckDB that don't need a marimo notebook.
 
 ## License
 

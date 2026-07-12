@@ -1,0 +1,54 @@
+name = "jx"
+description = "JUMP eXplore - agent-composable marimo notebooks over JUMP Cell Painting profiles, cosine-similarity matrices, and morphological activity"
+
+[data]
+surface = "duckdb"     # rest | duckdb | pooch | files
+version = "20496083"   # pinned Zenodo record for the similarity/gallery parquets (nb05/nb08); the profile
+                       # manifest is pinned separately at git tag v0.11.0. Bump both deliberately.
+cache = "$JX_CACHE"    # large remote artifacts (similarity matrices) cache under ~/.cache/jx, override with JX_CACHE
+
+[auth]
+env_var = ""           # JUMP profiles, Zenodo, and NCBI are all public; no token
+
+[getting_started]
+first_notebook = "nb07_compound_neighborhood.py"
+
+[[vignette]]
+notebook = "nb01_retrieve_profiles.py"
+helpers  = ["load_profile_index", "load_profiles", "profile_stats"]
+does     = "Fetch the JUMP profile manifest (pinned at git tag v0.11.0) and lazy-scan well-level parquet profiles for crispr/orf/compound; returns pl.LazyFrame"
+
+[[vignette]]
+notebook = "nb02_add_metadata.py"
+helpers  = ["load_profiles", "sample_with_negcon", "build_mapper", "annotate_profiles"]
+does     = "Join broad-babel annotations onto JCP2022 IDs; build_mapper is a generic {JCP2022 -> any column} lookup"
+
+[[vignette]]
+notebook = "nb03_calculate_activity.py"
+helpers  = ["sample_with_negcon", "filter_to_complete_plates", "attach_pert_type", "compute_map"]
+does     = "Morphological activity (mAP) via copairs; use when the question is 'how active is this perturbation?'"
+
+[[vignette]]
+notebook = "nb04_display_images.py"
+helpers  = ["lookup_site_metadata", "pick_first_site", "display_site"]
+does     = "Pull well metadata via jump_portrait, pick one imaging site, render a 5-channel Cell Painting image grid; input_column is standard_key/InChIKey/JCP2022"
+
+[[vignette]]
+notebook = "nb05_explore_similarity.py"
+helpers  = ["load_distance_matrix", "sample_submatrix", "plot_similarity_heatmap"]
+does     = "Lazy-scan the all-vs-all cosine matrix from the pinned Zenodo record; values are cosine similarities in [-1,1] (self ~ 1), sort descending"
+
+[[vignette]]
+notebook = "nb06_query_genes.py"
+helpers  = ["gene_symbols_to_ncbi", "entrez_gene_info", "parse_gene_list"]
+does     = "NCBI Entrez lookups for gene symbols; use when annotating CRISPR/ORF hits with gene descriptions"
+
+[[vignette]]
+notebook = "nb07_compound_neighborhood.py"
+helpers  = ["load_similarity_matrix", "nearest_neighbors"]
+does     = "Composition demo (first notebook): compound -> nearest neighbors in the cosine matrix -> annotated neighborhood with images"
+
+[[vignette]]
+notebook = "nb08_panel_similarity.py"
+helpers  = ["duck", "resolve_jcps", "activity_table", "panel_submatrix", "build_panel", "plot_similarity_clustermap"]
+does     = "User-named panel of perturbations -> per-modality cosine clustermap + activity coloring via DuckDB column projection over the pinned Zenodo parquets"
