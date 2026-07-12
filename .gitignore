@@ -19,3 +19,12 @@ __pycache__/
 
 # Secrets
 .env
+
+# Installed skills: recorded in the tracked skills-lock.json, NOT vendored.
+# compose-query is a jx-only skill (ggsql, no upstream counterpart) and stays tracked.
+.agents/
+.claude/skills/*
+!.claude/skills/compose-query/
+
+# Local red-team review cache written by the Stop hook; never commit.
+.claude/.red-team-cache/

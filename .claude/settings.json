@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/skills/vignette-catalog-compose-notebook/scripts/red-team-on-stop.sh 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -5,7 +5,9 @@ This is the primary repo for the VOA catalog pattern: it contains the public JUM
 
 `README.md` is the human entry point.
 `PLAN.md` is the planning and paper source of truth.
-The skills under `.claude/skills/` are the operational entry points: `getting-started` for first-run setup, `compose-notebook` for marimo composition, and `compose-query` for ggsql queries.
+This catalog uses the shared [vignette-catalog-skills](https://github.com/carpenter-singh-lab/vignette-catalog-skills) (`vignette-catalog-setup` for first-run setup, `vignette-catalog-compose-notebook` for marimo composition); its specifics live in `catalog.toml`.
+Those are installed via `npx skills add carpenter-singh-lab/vignette-catalog-skills --agent claude-code -y`, recorded in the tracked `skills-lock.json`, but **not vendored** (`.claude/skills/*` is gitignored) - restore them on a fresh clone.
+The repo-local `compose-query` skill (ggsql; no upstream counterpart) stays tracked under `.claude/skills/compose-query/` for the parallel `queries/` catalog.
 
 ## Launching notebooks
 
@@ -78,5 +80,16 @@ Almost every JUMP analysis request should start from the catalog:
 - gene annotation -> `nb06_query_genes`
 - compound-neighborhood composition demo -> `nb07_compound_neighborhood`
 
-Read `.claude/skills/compose-notebook/SKILL.md` before writing new notebook code.
-For pure SQL + chart questions against JUMP metadata, use `.claude/skills/compose-query/SKILL.md` instead.
+Read the installed `vignette-catalog-compose-notebook` skill (and `catalog.toml`'s `[[vignette]]` table) before writing new notebook code.
+For pure SQL + chart questions against JUMP metadata, use the repo-local `.claude/skills/compose-query/SKILL.md` instead.
+
+## jx-specific gotchas
+
+These do not live in the shared skill (the generic marimo/molab/PYTHONPATH ones do).
+
+- **`jump_portrait` + `broad_babel` versions must be in sync.** The PyPI `0.1.0` / `0.1.31` combo has a latent bug: `get_item_location_metadata` does a DuckDB replacement scan against `meta_wells`, but `broad_babel.data.get_table("well")` returns a path string in that release, not a DataFrame. The fix is on the `add_ci` branch of the Carpenter-Singh monorepo - install both from there rather than reimplementing `lookup_site_metadata` in the notebook:
+  ```
+  git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/broad_babel
+  git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/jump_portrait
+  ```
+- **Cache large remote artifacts under `JX_CACHE`.** The Zenodo similarity matrices are ~250 MB; the first nb07/nb08 run downloads them to `~/.cache/jx/` (override with the `JX_CACHE` env var). Seed the cache once (`curl -o ~/.cache/jx/<file> <zenodo-url>`) and check it before re-fetching; apply the same pattern to any other large artifact you find yourself re-pulling.

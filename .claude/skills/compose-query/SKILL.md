@@ -1,6 +1,6 @@
 ---
 name: compose-query
-description: Compose a new ggsql query in the jx repo to answer a SQL-shaped question against the canonical JUMP metadata DuckDB (`queries/data/jump_metadata.duckdb`) — plate/well/perturbation/compound demographics, source breakdowns, perturbation-type counts, joins across the metadata schema, anything visualizable as a single chart from one SELECT. Trigger when the user asks for a count, distribution, breakdown, summary, or "show me X across Y" question that maps cleanly to SQL + a chart, and the answer fits in one screen. Use this instead of writing a marimo notebook when no Python (image fetching, AnnData profiles, broad-babel translation, copairs computation) is needed. The companion skill `compose-notebook` covers the marimo path; cross-check before composing.
+description: Compose a new ggsql query in the jx repo to answer a SQL-shaped question against the canonical JUMP metadata DuckDB (`queries/data/jump_metadata.duckdb`) — plate/well/perturbation/compound demographics, source breakdowns, perturbation-type counts, joins across the metadata schema, anything visualizable as a single chart from one SELECT. Trigger when the user asks for a count, distribution, breakdown, summary, or "show me X across Y" question that maps cleanly to SQL + a chart, and the answer fits in one screen. Use this instead of writing a marimo notebook when no Python (image fetching, AnnData profiles, broad-babel translation, copairs computation) is needed. The companion skill `vignette-catalog-compose-notebook` covers the marimo path; cross-check before composing.
 ---
 
 # Compose a new ggsql query in the jx catalog
@@ -19,7 +19,7 @@ Don't reach for marimo unless the question genuinely needs Python.
 ## Surface decision in one paragraph
 
 If the question is answerable as `SELECT ... GROUP BY ...` plus a chart, write a `.gsql`.
-If the question needs to fetch images, load profiles, query NCBI, translate IDs via broad-babel, or compute mAP / similarity, write or extend a marimo notebook (see the `compose-notebook` skill).
+If the question needs to fetch images, load profiles, query NCBI, translate IDs via broad-babel, or compute mAP / similarity, write or extend a marimo notebook (see the `vignette-catalog-compose-notebook` skill).
 
 ## The catalog at a glance
 
@@ -172,4 +172,4 @@ If `ggsql --version` shows something older than 0.3.1, more patterns are restric
 
 - copairs activity / consistency results (different DB, requires `jump_metadata_augmented.duckdb` or `copairs_results.duckdb` — not built by `just setup`)
 - Interactive widgets / parameterized queries (no ggsql support yet)
-- Anything requiring image fetching, broad-babel translation, copairs, AnnData, or NCBI lookups → use the marimo catalog and the `compose-notebook` skill instead
+- Anything requiring image fetching, broad-babel translation, copairs, AnnData, or NCBI lookups → use the marimo catalog and the `vignette-catalog-compose-notebook` skill instead
