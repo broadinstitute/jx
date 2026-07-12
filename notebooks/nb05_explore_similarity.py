@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["marimo", "polars", "pyarrow", "requests", "matplotlib", "seaborn"]
+# dependencies = ["marimo", "polars", "pyarrow", "matplotlib", "seaborn"]
 # ///
 
 import marimo
@@ -11,26 +11,18 @@ app = marimo.App(width="medium")
 with app.setup:
     import marimo as mo
     import polars as pl
-    import requests
     import seaborn as sns
     import matplotlib.pyplot as plt
     from random import choices, seed as seed_rng
 
-    ZENODO_RECORD = "15029005"
+    ZENODO_RECORD = "20496083"  # pinned Zenodo version; bump deliberately, do not resolve /versions/latest
     DISTANCE_DATASETS = ("crispr", "orf")
-
-
-@app.function
-def latest_zenodo_id(record: str = ZENODO_RECORD) -> str:
-    """Resolve the latest versioned record ID for a Zenodo concept record."""
-    return requests.get(f"https://zenodo.org/api/records/{record}/versions/latest").json()["id"]
 
 
 @app.function
 def load_distance_matrix(dataset: str) -> pl.LazyFrame:
     """Lazy-scan the all-vs-all cosine similarity matrix for a dataset."""
-    latest_id = latest_zenodo_id()
-    url = f"https://zenodo.org/api/records/{latest_id}/files/{dataset}_cosinesim_full.parquet/content"
+    url = f"https://zenodo.org/api/records/{ZENODO_RECORD}/files/{dataset}_cosinesim_full.parquet/content"
     return pl.scan_parquet(url)
 
 

@@ -7,7 +7,6 @@
 #     "numpy",
 #     "pandas",
 #     "plotly",
-#     "requests",
 #     "scipy",
 # ]
 # ///
@@ -25,12 +24,11 @@ with app.setup:
     import numpy as np
     import pandas as pd
     import plotly.graph_objects as go
-    import requests
     from broad_babel.query import run_query
     from scipy.cluster.hierarchy import leaves_list, linkage
     from scipy.spatial.distance import squareform
 
-    ZENODO_RECORD = "15029005"
+    ZENODO_RECORD = "20496083"  # pinned Zenodo version; bump deliberately, do not resolve /versions/latest
     GENE_MODALITIES = ("orf", "crispr")
     COMPOUND_MODALITY = "compound"
 
@@ -134,16 +132,8 @@ def parse_items(text: str) -> list[str]:
 
 
 @app.function
-def latest_zenodo_id() -> str:
-    """Follow Zenodo's `/versions/latest` redirect to the actual record id."""
-    return requests.get(f"https://zenodo.org/api/records/{ZENODO_RECORD}/versions/latest", allow_redirects=True).json()[
-        "id"
-    ]
-
-
-@app.function
 def zenodo_file_url(filename: str) -> str:
-    return f"https://zenodo.org/api/records/{latest_zenodo_id()}/files/{filename}/content"
+    return f"https://zenodo.org/api/records/{ZENODO_RECORD}/files/{filename}/content"
 
 
 @app.function
