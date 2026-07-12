@@ -16,10 +16,7 @@
 import marimo
 
 __generated_with = "0.23.5"
-app = marimo.App(
-    width="medium",
-    layout_file="layouts/07_compound_neighborhood.grid.json",
-)
+app = marimo.App(width="medium")
 
 with app.setup:
     import os
