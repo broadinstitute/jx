@@ -82,3 +82,14 @@ Almost every JUMP analysis request should start from the catalog:
 
 Read the installed `vignette-catalog-compose-notebook` skill (and `catalog.toml`'s `[[vignette]]` table) before writing new notebook code.
 For pure SQL + chart questions against JUMP metadata, use the repo-local `.claude/skills/compose-query/SKILL.md` instead.
+
+## jx-specific gotchas
+
+These do not live in the shared skill (the generic marimo/molab/PYTHONPATH ones do).
+
+- **`jump_portrait` + `broad_babel` versions must be in sync.** The PyPI `0.1.0` / `0.1.31` combo has a latent bug: `get_item_location_metadata` does a DuckDB replacement scan against `meta_wells`, but `broad_babel.data.get_table("well")` returns a path string in that release, not a DataFrame. The fix is on the `add_ci` branch of the Carpenter-Singh monorepo - install both from there rather than reimplementing `lookup_site_metadata` in the notebook:
+  ```
+  git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/broad_babel
+  git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/jump_portrait
+  ```
+- **Cache large remote artifacts under `JX_CACHE`.** The Zenodo similarity matrices are ~250 MB; the first nb07/nb08 run downloads them to `~/.cache/jx/` (override with the `JX_CACHE` env var). Seed the cache once (`curl -o ~/.cache/jx/<file> <zenodo-url>`) and check it before re-fetching; apply the same pattern to any other large artifact you find yourself re-pulling.

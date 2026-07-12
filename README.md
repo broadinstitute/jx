@@ -27,7 +27,7 @@ Related public catalogs of the same pattern: [fgx](https://github.com/broadinsti
 ## Getting started
 
 This catalog follows the [vignette-catalog-skills](https://github.com/carpenter-singh-lab/vignette-catalog-skills) pattern.
-The skill stores are gitignored, so a fresh clone has only `skills-lock.json`; restore the on-disk skill content first:
+The installed skill stores are gitignored, so a fresh clone has `skills-lock.json` plus the repo-local `compose-query` skill (see below); restore the installed skill content first:
 
 ```bash
 uv --version  # or: curl -LsSf https://astral.sh/uv/install.sh | sh

@@ -6,6 +6,7 @@ surface = "duckdb"     # rest | duckdb | pooch | files
 version = "20496083"   # pinned Zenodo record for the similarity/gallery parquets (nb05/nb08); the profile
                        # manifest is pinned separately at git tag v0.11.0. Bump both deliberately.
 cache = "$JX_CACHE"    # large remote artifacts (similarity matrices) cache under ~/.cache/jx, override with JX_CACHE
+caveats = "AGENTS.md"  # jx-specific gotchas (jump_portrait/broad_babel version sync, cache seeding) under "jx-specific gotchas"
 
 [auth]
 env_var = ""           # JUMP profiles, Zenodo, and NCBI are all public; no token
