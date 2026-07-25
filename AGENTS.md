@@ -6,9 +6,17 @@ This is the primary repo for the VOA catalog pattern: it contains the public JUM
 `README.md` is the human entry point.
 `PLAN.md` is the planning and paper source of truth.
 This catalog uses the shared [vignette-catalog-skills](https://github.com/carpenter-singh-lab/vignette-catalog-skills) (`vignette-catalog-setup` for first-run setup, `vignette-catalog-compose-notebook` for marimo composition); its specifics live in `catalog.toml`.
-Those are installed via `npx skills add carpenter-singh-lab/vignette-catalog-skills -a claude-code -a codex -y`, recorded in the tracked `skills-lock.json`, but **not vendored** (`.claude/skills/*` and `.agents/` are gitignored).
-On a fresh clone, `npx skills experimental_install` restores the canonical `.agents/skills/` store used by Codex.
-The lock does not record agent targets, so rerun the relevant add commands with repeated `-a claude-code -a codex` flags when Claude Code's `.claude/skills/` links also need to be created.
+Third-party skills are recorded in the tracked `skills-lock.json`, but **not vendored** (`.claude/skills/*` and `.agents/` are gitignored).
+After cloning, run these exact commands from the repo root:
+
+```bash
+npx skills@1.5.20 add carpenter-singh-lab/vignette-catalog-skills -s vignette-catalog-compose-notebook -s vignette-catalog-scaffold -s vignette-catalog-setup -a claude-code -a codex -y
+npx skills@1.5.20 add marimo-team/skills -s marimo-notebook -a claude-code -a codex -y
+npx skills@1.5.20 add marimo-team/marimo-pair -s marimo-pair -a claude-code -a codex -y
+```
+
+The lock records observed hashes but not agent targets or immutable revisions for these plain sources, so it is a drift record rather than a reproducible installer input.
+Replay the same commands to update, then inspect `git diff -- skills-lock.json` before committing an intentional upstream change.
 The repo-local `compose-query` skill (ggsql; no upstream counterpart) stays tracked under `.claude/skills/compose-query/` for the parallel `queries/` catalog.
 
 ## Launching notebooks
