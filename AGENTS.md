@@ -6,7 +6,8 @@ This is the primary repo for the VOA catalog pattern: it contains the public JUM
 `README.md` is the human entry point.
 `PLAN.md` is the planning and paper source of truth.
 This catalog uses the shared [vignette-catalog-skills](https://github.com/carpenter-singh-lab/vignette-catalog-skills) (`vignette-catalog-setup` for first-run setup, `vignette-catalog-compose-notebook` for marimo composition); its specifics live in `catalog.toml`.
-Those are installed via `npx skills add carpenter-singh-lab/vignette-catalog-skills --agent claude-code -y`, recorded in the tracked `skills-lock.json`, but **not vendored** (`.claude/skills/*` is gitignored) - restore them on a fresh clone.
+Those are installed via `npx skills add carpenter-singh-lab/vignette-catalog-skills -a claude-code -a codex -y`, recorded in the tracked `skills-lock.json`, but **not vendored** (`.claude/skills/*` and `.agents/` are gitignored).
+Restore every pinned skill on a fresh clone with `npx skills experimental_install`.
 The repo-local `compose-query` skill (ggsql; no upstream counterpart) stays tracked under `.claude/skills/compose-query/` for the parallel `queries/` catalog.
 
 ## Launching notebooks
