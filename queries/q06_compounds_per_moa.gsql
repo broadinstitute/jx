@@ -1,0 +1,27 @@
+-- title: Compounds per mechanism of action (top 20)
+-- description: The 20 Drug Repurposing Hub mechanisms of action with the most JUMP compounds. Metadata_repurposing_moa is a pipe-delimited multilabel field, so it is unnested before counting distinct JCP2022 IDs per mechanism. Uses the augmented DB, which adds compound_metadata on top of the base tables.
+-- reader: duckdb://data/jump_metadata_augmented.duckdb
+-- sort: value-desc
+
+WITH exploded AS (
+    SELECT
+        Metadata_JCP2022 AS jcp,
+        trim(moa) AS mechanism_of_action
+    FROM compound_metadata,
+         UNNEST(string_split(Metadata_repurposing_moa, '|')) AS t(moa)
+    WHERE Metadata_repurposing_moa IS NOT NULL
+      AND trim(moa) != ''
+),
+counts AS (
+    SELECT mechanism_of_action, COUNT(DISTINCT jcp) AS n_compounds
+    FROM exploded
+    GROUP BY mechanism_of_action
+)
+SELECT mechanism_of_action, n_compounds
+FROM counts
+ORDER BY n_compounds DESC
+LIMIT 20
+
+VISUALISE mechanism_of_action AS y, n_compounds AS x
+DRAW bar
+LABEL title => 'JUMP compounds per mechanism of action (top 20)'

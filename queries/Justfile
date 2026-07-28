@@ -1,14 +1,35 @@
-ggsql := env_var_or_default("GGSQL", "ggsql")
-db    := "data/jump_metadata.duckdb"
+ggsql        := env_var_or_default("GGSQL", "ggsql")
+db           := "data/jump_metadata.duckdb"
+augmented_db := "data/jump_metadata_augmented.duckdb"
+
+# Public S3 datastore for the 2025 Chandrasekaran JUMP production paper.
+s3_base          := "https://imaging-platform.s3.amazonaws.com/projects/cpg0042-chandrasekaran-jump/workspace/publication_data/2025_Chandrasekaran/jump_production_datastore"
+db_url           := s3_base + "/external/jump_metadata.duckdb"
+augmented_db_url := s3_base + "/interim/jump_metadata_augmented.duckdb"
 
 default:
     @just --list
 
-# Build the canonical jump_metadata.duckdb from a sibling clone of jump-cellpainting/datasets.
-# Override the source dir with: just datasets=path/to/datasets setup
-datasets := "../../datasets"
+# Download the prebuilt DuckDBs from the public S3 datastore.
+#   {{db}}           — base JUMP metadata (used by q01-q05)
+#   {{augmented_db}} — adds compound_metadata (repurposing MOA, chemical-probe targets, properties)
+# Re-running is cheap: files already present are skipped. Force a refresh with 'just refresh'.
 setup:
-    @test -d {{datasets}}/metadata || (echo "Need a clone of jump-cellpainting/datasets at {{datasets}}/. Override with 'just datasets=PATH setup'." && exit 1)
+    @mkdir -p data
+    @test -f {{db}} || (echo "Downloading {{db}} (~177 MB) ..." && curl -fSL {{db_url}} -o {{db}}.part && mv {{db}}.part {{db}})
+    @test -f {{augmented_db}} || (echo "Downloading {{augmented_db}} (~272 MB) ..." && curl -fSL {{augmented_db_url}} -o {{augmented_db}}.part && mv {{augmented_db}}.part {{augmented_db}})
+    @echo "Ready: {{db}} and {{augmented_db}}"
+
+# Re-download both DuckDBs even if present.
+refresh:
+    @rm -f {{db}} {{augmented_db}}
+    @just setup
+
+# Build the base DB locally from a sibling clone of jump-cellpainting/datasets (provenance / offline).
+# Override the source dir with: just datasets=path/to/datasets build
+datasets := "../../datasets"
+build:
+    @test -d {{datasets}}/metadata || (echo "Need a clone of jump-cellpainting/datasets at {{datasets}}/. Override with 'just datasets=PATH build'." && exit 1)
     @rm -f {{db}}
     cd {{datasets}}/metadata && duckdb {{justfile_directory()}}/{{db}} < db/setup.sql
     @echo "Built {{db}}"
