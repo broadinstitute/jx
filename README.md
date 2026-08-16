@@ -21,6 +21,7 @@ Each notebook ships with a committed session snapshot under [`notebooks/__marimo
 | [`nb05_explore_similarity.py`](notebooks/nb05_explore_similarity.py) | Cosine-similarity search over JUMP profiles | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb05_explore_similarity.py) |
 | [`nb06_query_genes.py`](notebooks/nb06_query_genes.py) | Translate gene / compound identifiers via `broad-babel` | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb06_query_genes.py) |
 | [`nb07_compound_neighborhood.py`](notebooks/nb07_compound_neighborhood.py) | Composition demo: compound -> similar perturbations -> annotated neighborhood with images | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb07_compound_neighborhood.py) |
+| [`nb08_panel_similarity.py`](notebooks/nb08_panel_similarity.py) | Resolve mixed perturbation panels, annotate activity, and compare morphology across modalities | [![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/broadinstitute/jx/blob/main/notebooks/nb08_panel_similarity.py) |
 
 Related public catalogs of the same pattern: [fgx](https://github.com/broadinstitute/fgx) for FinnGenie human genetics, [prx](https://github.com/broadinstitute/prx) for PROSPECT chemical genetics, and [dmx](https://github.com/broadinstitute/dmx) for DepMap Breadbox.
 
@@ -31,11 +32,12 @@ The installed skill stores are gitignored, so a fresh clone has `skills-lock.jso
 
 ```bash
 uv --version  # or: curl -LsSf https://astral.sh/uv/install.sh | sh
-npx skills add carpenter-singh-lab/vignette-catalog-skills --agent claude-code -y
-npx skills add marimo-team/marimo-pair --agent claude-code -y
+npx skills@1.5.20 add carpenter-singh-lab/vignette-catalog-skills -s vignette-catalog-compose-notebook -s vignette-catalog-scaffold -a claude-code -a codex -y
+npx skills@1.5.20 add marimo-team/marimo-pair -s marimo-pair -a claude-code -a codex -y
 ```
 
-Then open [Claude Code](https://code.claude.com/docs) in this repo and ask to *get started* - the `vignette-catalog-setup` skill installs prereqs ([uv](https://docs.astral.sh/uv/) and the [marimo-pair](https://github.com/marimo-team/marimo-pair) skill), launches `nb07_compound_neighborhood` in a live marimo kernel, and hands off to `vignette-catalog-compose-notebook` for the actual analysis.
+Then open Claude Code or Codex in this repo and ask to *get started*.
+The `vignette-catalog-compose-notebook` skill launches `nb07_compound_neighborhood` in a live marimo kernel and handles later analysis in the same workflow.
 
 jx also ships a repo-local `compose-query` skill (tracked under `.claude/skills/compose-query/`) for the parallel ggsql catalog under `queries/` - pure SQL + chart questions against the JUMP metadata DuckDB that don't need a marimo notebook.
 

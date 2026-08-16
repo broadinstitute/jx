@@ -25,6 +25,3 @@ __pycache__/
 .agents/
 .claude/skills/*
 !.claude/skills/compose-query/
-
-# Local red-team review cache written by the Stop hook; never commit.
-.claude/.red-team-cache/

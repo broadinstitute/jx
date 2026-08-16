@@ -5,12 +5,12 @@ This is the primary repo for the VOA catalog pattern: it contains the public JUM
 
 `README.md` is the human entry point.
 `PLAN.md` is the planning and paper source of truth.
-This catalog uses the shared [vignette-catalog-skills](https://github.com/carpenter-singh-lab/vignette-catalog-skills) (`vignette-catalog-setup` for first-run setup, `vignette-catalog-compose-notebook` for marimo composition); its specifics live in `catalog.toml`.
+This catalog uses the shared [vignette-catalog-skills](https://github.com/carpenter-singh-lab/vignette-catalog-skills), with `vignette-catalog-compose-notebook` handling setup, execution, and composition; its specifics live in `catalog.toml`.
 Third-party skills are recorded in the tracked `skills-lock.json`, but **not vendored** (`.claude/skills/*` and `.agents/` are gitignored).
 After cloning, run these exact commands from the repo root:
 
 ```bash
-npx skills@1.5.20 add carpenter-singh-lab/vignette-catalog-skills -s vignette-catalog-compose-notebook -s vignette-catalog-scaffold -s vignette-catalog-setup -a claude-code -a codex -y
+npx skills@1.5.20 add carpenter-singh-lab/vignette-catalog-skills -s vignette-catalog-compose-notebook -s vignette-catalog-scaffold -a claude-code -a codex -y
 npx skills@1.5.20 add marimo-team/skills -s marimo-notebook -a claude-code -a codex -y
 npx skills@1.5.20 add marimo-team/marimo-pair -s marimo-pair -a claude-code -a codex -y
 ```
@@ -42,24 +42,16 @@ PORT=$(python -c "import socket; s=socket.socket(); s.bind(('127.0.0.1',0)); pri
 env -u PYTHONPATH uvx marimo edit --sandbox --headless --no-token --port $PORT notebooks/nbNN_*.py
 ```
 
-Then run static checks:
+Then run the installed skill's final gate:
 
 ```bash
-uvx ruff check notebooks/
-uvx ruff format notebooks/
-uvx marimo check notebooks/*.py
+VALIDATE=$(ls .agents/skills/vignette-catalog-compose-notebook/scripts/validate-notebook.sh .claude/skills/vignette-catalog-compose-notebook/scripts/validate-notebook.sh 2>/dev/null | head -1)
+bash "$VALIDATE" notebooks/nbNN_*.py
 ```
 
-**Then, last, refresh the molab session snapshot** for any notebook whose source changed in this task:
-
-```bash
-env -u PYTHONPATH uvx marimo export session --sandbox notebooks/nbNN_*.py
-```
-
-Order matters.
+The validator runs stable static checks, formatting, cold execution, and refreshes the molab session snapshot last.
 Session snapshots store a `code_hash` per cell, and molab attaches the stored output only when the snapshot hash matches the source cell.
-Any later edit to the notebook source - including a `ruff format` whitespace pass - shifts every `code_hash` and silently strips outputs in the public molab preview.
-Always regenerate snapshots **after** the final formatter / source edit, and commit the regenerated `.json` files in the same change that touched the `.py` files.
+Run it after the final source edit, and commit regenerated `.json` files with changed notebooks.
 
 ## Architecture
 
@@ -68,7 +60,6 @@ Always regenerate snapshots **after** the final formatter / source edit, and com
   Later notebooks import from earlier notebooks by adding `notebooks/` to `sys.path`.
 - `jx` has two surfaces: marimo notebooks for Python-glue analyses and `queries/` ggsql files for pure metadata queries.
 - Keep notebook helpers close to data primitives: `polars`, `duckdb`, `broad-babel`, `jump-portrait`, and small parsing or plotting functions.
-- Cache large remote artifacts under `~/.cache/jx` or `JX_CACHE`; do not commit downloaded data.
 - Do not add a Python package until repeated cross-notebook imports make the notebook-as-library pattern painful.
 
 ## Conventions
@@ -89,6 +80,7 @@ Almost every JUMP analysis request should start from the catalog:
 - morphological similarity -> `nb05_explore_similarity`
 - gene annotation -> `nb06_query_genes`
 - compound-neighborhood composition demo -> `nb07_compound_neighborhood`
+- mixed-modality panel activity and similarity -> `nb08_panel_similarity`
 
 Read the installed `vignette-catalog-compose-notebook` skill (and `catalog.toml`'s `[[vignette]]` table) before writing new notebook code.
 For pure SQL + chart questions against JUMP metadata, use the repo-local `.claude/skills/compose-query/SKILL.md` instead.
@@ -97,9 +89,6 @@ For pure SQL + chart questions against JUMP metadata, use the repo-local `.claud
 
 These do not live in the shared skill (the generic marimo/molab/PYTHONPATH ones do).
 
-- **`jump_portrait` + `broad_babel` versions must be in sync.** The PyPI `0.1.0` / `0.1.31` combo has a latent bug: `get_item_location_metadata` does a DuckDB replacement scan against `meta_wells`, but `broad_babel.data.get_table("well")` returns a path string in that release, not a DataFrame. The fix is on the `add_ci` branch of the Carpenter-Singh monorepo - install both from there rather than reimplementing `lookup_site_metadata` in the notebook:
-  ```
-  git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/broad_babel
-  git+https://github.com/broadinstitute/monorepo.git@add_ci#subdirectory=libs/jump_portrait
-  ```
-- **Cache large remote artifacts under `JX_CACHE`.** The Zenodo similarity matrices are ~250 MB; the first nb07/nb08 run downloads them to `~/.cache/jx/` (override with the `JX_CACHE` env var). Seed the cache once (`curl -o ~/.cache/jx/<file> <zenodo-url>`) and check it before re-fetching; apply the same pattern to any other large artifact you find yourself re-pulling.
+- **`jump_portrait` + `broad_babel` versions must stay compatible.** The old `jump-portrait==0.1.0` / `broad-babel==0.1.31` combination is broken; current cold runs pass with `jump-portrait==0.1.1` and `broad-babel==0.1.31`.
+- **Treat matrix caching as an explicit choice.** Nb07 reads a preseeded `JX_CACHE` entry but does not populate it, while nb08 uses DuckDB `httpfs` and does not use `JX_CACHE`.
+  The CRISPR, ORF, and compound matrices are about 228 MiB, 813 MiB, and 46 GiB, so project columns remotely and never seed the compound matrix casually.
