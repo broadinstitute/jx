@@ -46,7 +46,7 @@ Then run the installed skill's final gate:
 
 ```bash
 VALIDATE=$(ls .agents/skills/vignette-catalog-compose-notebook/scripts/validate-notebook.sh .claude/skills/vignette-catalog-compose-notebook/scripts/validate-notebook.sh 2>/dev/null | head -1)
-bash "$VALIDATE" notebooks/nbNN_*.py
+bash "$VALIDATE" --write notebooks/nbNN_*.py
 ```
 
 The validator runs stable static checks, formatting, cold execution, and refreshes the molab session snapshot last.
