@@ -24,4 +24,5 @@ __pycache__/
 # compose-query is a jx-only skill (ggsql, no upstream counterpart) and stays tracked.
 .agents/
 .claude/skills/*
+.claude/worktrees/
 !.claude/skills/compose-query/
