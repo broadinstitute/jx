@@ -33,6 +33,7 @@ The installed skill stores are gitignored, so a fresh clone has `skills-lock.jso
 ```bash
 uv --version  # or: curl -LsSf https://astral.sh/uv/install.sh | sh
 npx skills@1.5.20 add carpenter-singh-lab/vignette-catalog-skills -s vignette-catalog-compose-notebook -s vignette-catalog-scaffold -a claude-code -a codex -y
+npx skills@1.5.20 add marimo-team/skills -s marimo-notebook -a claude-code -a codex -y
 npx skills@1.5.20 add marimo-team/marimo-pair -s marimo-pair -a claude-code -a codex -y
 ```
 

@@ -15,6 +15,7 @@ npx skills@1.5.20 add marimo-team/skills -s marimo-notebook -a claude-code -a co
 npx skills@1.5.20 add marimo-team/marimo-pair -s marimo-pair -a claude-code -a codex -y
 ```
 
+Repository instructions, `catalog.toml`, and the compose notebook contract override generic `marimo-notebook` advice when they are more specific.
 The lock records observed hashes but not agent targets or immutable revisions for these plain sources, so it is a drift record rather than a reproducible installer input.
 Replay the same commands to update, then inspect `git diff -- skills-lock.json` before committing an intentional upstream change.
 The repo-local `compose-query` skill (ggsql; no upstream counterpart) stays tracked under `.claude/skills/compose-query/` for the parallel `queries/` catalog.
