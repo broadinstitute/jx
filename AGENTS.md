@@ -10,7 +10,7 @@ Third-party skills are recorded in the tracked `skills-lock.json`, but **not ven
 After cloning, run these exact commands from the repo root:
 
 ```bash
-npx skills@1.5.20 add carpenter-singh-lab/vignette-catalog-skills -s vignette-catalog-compose-notebook -s vignette-catalog-scaffold -a claude-code -a codex -y
+npx skills@1.5.20 add 'carpenter-singh-lab/vignette-catalog-skills#v0.5.1' -s vignette-catalog-compose-notebook -s vignette-catalog-scaffold -a claude-code -a codex -y
 npx skills@1.5.20 add marimo-team/skills -s marimo-notebook -a claude-code -a codex -y
 npx skills@1.5.20 add marimo-team/marimo-pair -s marimo-pair -a claude-code -a codex -y
 ```

@@ -15,12 +15,14 @@
     },
     "vignette-catalog-compose-notebook": {
       "source": "carpenter-singh-lab/vignette-catalog-skills",
+      "ref": "v0.5.1",
       "sourceType": "github",
       "skillPath": "skills/vignette-catalog-compose-notebook/SKILL.md",
       "computedHash": "36d855cefb0280701664cbf819d901e4d28144b2c674f6428ea19d8db5aed2a0"
     },
     "vignette-catalog-scaffold": {
       "source": "carpenter-singh-lab/vignette-catalog-skills",
+      "ref": "v0.5.1",
       "sourceType": "github",
       "skillPath": "skills/vignette-catalog-scaffold/SKILL.md",
       "computedHash": "f7b20c944d5b6203a9735dc016ba3bef44a72f8c5ae5d1cd5a947127699b11d1"
